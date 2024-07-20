@@ -18,13 +18,13 @@ import { Link } from 'react-router-dom';
 import ConfirmationDialog from './ConfirmationDialog';
 
 const pages = [
-  { name: 'Dashboard', path: '/dashboard' },
+  { name: 'Dashboard', path: '/admin-dashboard' },
   { name: 'User View', path: '/user-view' }
 ];
 
 const settings = [
   { name: 'Profile', path: '/profile' },
-  { name: 'Dashboard', path: '/dashboard' },
+  { name: 'Dashboard', path: '/admin-dashboard' },
   { name: 'Logout', path: '/' }
 ];
 
@@ -88,7 +88,7 @@ const NavbarAdmin = () => {
             variant="h6"
             noWrap
             component={Link}
-            to="/dashboard"
+            to="/admin-dashboard"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -143,7 +143,7 @@ const NavbarAdmin = () => {
             variant="h5"
             noWrap
             component={Link}
-            to="/dashboard"
+            to="/admin-dashboard"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },

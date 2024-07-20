@@ -15,14 +15,14 @@ const Navbar = () => {
               <a className="nav-link active" aria-current="page" href="#">Home</a>
             </li>
             <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a className="nav-link" href="/login" role="button"  aria-expanded="false">
                 Login/Sign up
               </a>
-              <ul className="dropdown-menu">
-                <li><a className="dropdown-item" href="#">User</a></li>
+              {/* <ul className="dropdown-menu">
+                <li><a className="dropdown-item" href="/">User</a></li>
                 <li><a className="dropdown-item" href="#">Admin</a></li>
                 <li><hr className="dropdown-divider" /></li>
-              </ul>
+              </ul> */}
             </li>
             <form className="d-flex" role="search">
               <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />

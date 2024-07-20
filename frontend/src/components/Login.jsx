@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Stack, TextField, Button, InputAdornment, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography, Link } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const Login = ({ setAuthenticated }) => {
   const [username, setUsername] = useState('');
@@ -15,7 +16,10 @@ const Login = ({ setAuthenticated }) => {
   const handleLogin = () => {
     if (username === 'admin' && password === 'password') {
       setAuthenticated(true);
-      navigate('/dashboard');
+      navigate('/admin-dashboard');
+    }else if (username === 'user' && password === 'password'){
+      setAuthenticated(true);
+      navigate('/user-dashboard');
     } else {
       setOpen(true);
     }
@@ -36,6 +40,10 @@ const Login = ({ setAuthenticated }) => {
     fontSize: '2rem',
     color: 'black',
   };
+  const onBackClick = () => {
+    navigate ('/')
+  }
+  
   return (
     <div>
     <Box
@@ -51,10 +59,22 @@ const Login = ({ setAuthenticated }) => {
         alignItems: 'center',
         justifyContent: 'center',
         boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.3)',
-        zIndex: 1200 // Ensure it's above other content
+        zIndex: 1200 
       }}
     >
-      <Typography variant="h5" style = {curvyTextStyle2}>Event Manager</Typography>
+      <IconButton
+        onClick={onBackClick}
+        sx={{ 
+          position: 'absolute', 
+          left: '10px', 
+          color: 'white'
+        }}
+      >
+        <ArrowBackIcon />
+      </IconButton>
+      <Typography variant="h5" style={curvyTextStyle2}>
+        Event Manager
+      </Typography>
     </Box>
     <Box sx={{ textAlign: 'center', mb: 3, mt : 6 }}>
         <Typography variant="h2" component="h1" color="black" style={curvyTextStyle}>

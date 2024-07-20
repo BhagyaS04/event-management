@@ -5,7 +5,6 @@ import Button from '@mui/material/Button';
 import FaceIcon from '@mui/icons-material/Face';
 import EmailIcon from '@mui/icons-material/Email';
 import LoopIcon from '@mui/icons-material/Loop';
-import DeleteIcon from '@mui/icons-material/Delete';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 import ConfirmationDialog from './ConfirmationDialog';

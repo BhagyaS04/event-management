@@ -92,7 +92,7 @@ const Signup = () => {
 
   const handleDialogClose = () => {
     if (dialogMessage === 'Sign up successful!') {
-      navigate('/');
+      navigate('/login');
     } else {
       setDialogOpen(false);
     }
@@ -309,7 +309,7 @@ const Signup = () => {
               Sign up
             </Button>
             <Box sx={{ mt: 2, textAlign: 'center' }}>
-              <Link href="/" color="primary" underline="hover">
+              <Link href="/login" color="primary" underline="hover">
                 Back to login
               </Link>
             </Box>
