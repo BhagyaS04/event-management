@@ -1,34 +1,31 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import Layout from './components/Layout'
+import AllEventsAdmin from './components/AllEventsAdmin'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import ManageEvent from './components/ManageEvent'
+import ManageUser from './components/ManageUser'
+import ViewRegistrations from './components/ViewRegistrations'
+import Login from './components/Login'
+import Signup from './components/Signup'
+import MainLayout from './components/Mainlayout'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more about this
-      </p>
-    </>
+    <Router>
+      <Routes>
+      <Route path="/" element={<Login setAuthenticated={setIsAuthenticated} />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/dashboard" element={<MainLayout><Layout /></MainLayout>} />
+        <Route path="/dashboard/all-events" element={<MainLayout><AllEventsAdmin /></MainLayout>} />
+        <Route path="/dashboard/manage-events" element={<MainLayout><ManageEvent /></MainLayout>} />
+        <Route path="/dashboard/manage-users" element={<MainLayout><ManageUser /></MainLayout>} />
+        <Route path="/dashboard/view-registrations" element={<MainLayout><ViewRegistrations /></MainLayout>} />
+      </Routes>
+    </Router>
   )
 }
 
