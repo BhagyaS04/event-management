@@ -13,15 +13,40 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-const pages = ['Dashboard', 'User'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = [{name : 'Dashboard', path : '/dashboard'},
+                {name : 'User view', path : '/user-view'}
+              ];
+const settings = [{ name: 'Profile', path: '/profile' },
+  { name: 'Dashboard', path: '/dashboard' },
+  { name: 'Logout', path: '/' }];
 
 const NavbarAdmin = () => {
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const navigate = useNavigate()
+
+    const handleOpenMenu = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+  
+    const handleCloseMenu = () => {
+      setAnchorEl(null);
+    };
+
+    const [open, setOpen] = useState(false);
+  const handleMenuItemClick = (path) => {
+    if (path === '/logout') {
+      setOpen(true); // Open the confirmation dialog
+    } else {
+      navigate(path);
+      handleCloseMenu();
+    }
+    
+  };
   
     const handleOpenNavMenu = (event) => {
       setAnchorElNav(event.currentTarget);
@@ -91,9 +116,9 @@ const NavbarAdmin = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+              {pages.map(({ name, path }) => (
+                <MenuItem key={name} component={Link} to={path}>
+                  <Typography textAlign="center">{name}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -102,8 +127,8 @@ const NavbarAdmin = () => {
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+            component={Link}
+            to="/dashboard"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -118,13 +143,14 @@ const NavbarAdmin = () => {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
+          {pages.map(({ name, path }) => (
               <Button
-                key={page}
-                onClick={handleCloseNavMenu}
+                key={name}
+                component={Link}
+                to={path}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
+                {name}
               </Button>
             ))}
           </Box>
@@ -152,10 +178,10 @@ const NavbarAdmin = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+          <MenuItem key={setting.name} onClick={() => handleMenuItemClick(setting.path)}>
+            <Typography textAlign="center">{setting.name}</Typography>
+          </MenuItem>
+        ))}
             </Menu>
           </Box>
         </Toolbar>

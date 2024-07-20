@@ -92,7 +92,7 @@ const Signup = () => {
 
   const handleDialogClose = () => {
     if (dialogMessage === 'Sign up successful!') {
-      navigate('/login');
+      navigate('/');
     } else {
       setDialogOpen(false);
     }
