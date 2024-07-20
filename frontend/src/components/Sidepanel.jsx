@@ -28,7 +28,7 @@ const Sidepanel = () => {
 
   const handleConfirm = () => {
     console.log('Confirmed!');
-    navigate('/logout'); // You might want to handle actual logout logic here
+    navigate('/'); 
     setOpen(false);
   };
 
@@ -41,7 +41,7 @@ const Sidepanel = () => {
       backgroundColor: '#d3d3d3',
       height: '100%',
       width: 250,
-      color: 'black' // Adjusted to match button colors
+      color: 'black' 
     }}>
       <Stack spacing={2} direction="column" justifyContent="center" style={{ marginTop: '60px' }}>
         <Button variant="text" startIcon={<FaceIcon />}>Edit Profile</Button>

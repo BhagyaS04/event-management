@@ -15,56 +15,71 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import ConfirmationDialog from './ConfirmationDialog';
 
-const pages = [{name : 'Dashboard', path : '/dashboard'},
-                {name : 'User view', path : '/user-view'}
-              ];
-const settings = [{ name: 'Profile', path: '/profile' },
+const pages = [
   { name: 'Dashboard', path: '/dashboard' },
-  { name: 'Logout', path: '/' }];
+  { name: 'User View', path: '/user-view' }
+];
+
+const settings = [
+  { name: 'Profile', path: '/profile' },
+  { name: 'Dashboard', path: '/dashboard' },
+  { name: 'Logout', path: '/' }
+];
 
 const NavbarAdmin = () => {
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [logoutPath, setLogoutPath] = useState('');
 
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
-    const navigate = useNavigate()
+  const navigate = useNavigate();
 
-    const handleOpenMenu = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
-  
-    const handleCloseMenu = () => {
-      setAnchorEl(null);
-    };
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
 
-    const [open, setOpen] = useState(false);
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const handleMenuItemClick = (path) => {
-    if (path === '/logout') {
-      setOpen(true); // Open the confirmation dialog
+    if (path === '/') {
+      setOpenDialog(true);
+      setLogoutPath(path);
     } else {
       navigate(path);
-      handleCloseMenu();
+      handleCloseUserMenu();
     }
-    
   };
-  
-    const handleOpenNavMenu = (event) => {
-      setAnchorElNav(event.currentTarget);
-    };
-    const handleOpenUserMenu = (event) => {
-      setAnchorElUser(event.currentTarget);
-    };
-  
-    const handleCloseNavMenu = () => {
-      navigate(path);
-    };
-  
-    const handleCloseUserMenu = () => {
-      setAnchorElUser(null);
-    };
-  
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleConfirmLogout = () => {
+    localStorage.removeItem('authToken'); 
+    sessionStorage.removeItem('authToken'); 
+
+    navigate('/'); 
+    setOpenDialog(false);
+  };
 
   return (
+    <>
     <AppBar position="absolute">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -72,12 +87,12 @@ const NavbarAdmin = () => {
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="/dashboard"
+            component={Link}
+            to="/dashboard"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
-              fontFamily: 'Helvatica',
+              fontFamily: 'Helvetica',
               fontWeight: 700,
               letterSpacing: '.2rem',
               color: 'inherit',
@@ -90,7 +105,7 @@ const NavbarAdmin = () => {
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
-              aria-label="account of current user"
+              aria-label="menu"
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
@@ -117,7 +132,7 @@ const NavbarAdmin = () => {
               }}
             >
               {pages.map(({ name, path }) => (
-                <MenuItem key={name} component={Link} to={path}>
+                <MenuItem key={name} component={Link} to={path} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">{name}</Typography>
                 </MenuItem>
               ))}
@@ -143,7 +158,7 @@ const NavbarAdmin = () => {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-          {pages.map(({ name, path }) => (
+            {pages.map(({ name, path }) => (
               <Button
                 key={name}
                 component={Link}
@@ -158,7 +173,7 @@ const NavbarAdmin = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Aemy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Aser Avatar" src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -178,16 +193,24 @@ const NavbarAdmin = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-          <MenuItem key={setting.name} onClick={() => handleMenuItemClick(setting.path)}>
-            <Typography textAlign="center">{setting.name}</Typography>
-          </MenuItem>
-        ))}
+                <MenuItem key={setting.name} onClick={() => handleMenuItemClick(setting.path)}>
+                  <Typography textAlign="center">{setting.name}</Typography>
+                </MenuItem>
+              ))}
             </Menu>
           </Box>
         </Toolbar>
       </Container>
     </AppBar>
-  )
-}
+  <ConfirmationDialog
+  open={openDialog}
+  onClose={handleCloseDialog}
+  onConfirm={handleConfirmLogout}
+  title="Confirmation"
+  content="Are you sure you want to logout?"
+/>
+</>
+  );
+};
 
-export default NavbarAdmin
+export default NavbarAdmin;
