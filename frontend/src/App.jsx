@@ -9,6 +9,11 @@ import ViewRegistrations from './components/ViewRegistrations'
 import Login from './components/Login'
 import Signup from './components/Signup'
 import MainLayout from './components/Mainlayout'
+import Home from './components/Home'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
+import UpcomingEvent from './components/UpcomingEvent'
+import UserDashboard from './components/UserDashboard';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -17,13 +22,15 @@ function App() {
   return (
     <Router>
       <Routes>
-      <Route path="/" element={<Login setAuthenticated={setIsAuthenticated} />} />
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login setAuthenticated={setIsAuthenticated} />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/dashboard" element={<MainLayout><Layout /></MainLayout>} />
-        <Route path="/dashboard/all-events" element={<MainLayout><AllEventsAdmin /></MainLayout>} />
-        <Route path="/dashboard/manage-events" element={<MainLayout><ManageEvent /></MainLayout>} />
-        <Route path="/dashboard/manage-users" element={<MainLayout><ManageUser /></MainLayout>} />
-        <Route path="/dashboard/view-registrations" element={<MainLayout><ViewRegistrations /></MainLayout>} />
+        <Route path ='/user-dashboard' element = {<UserDashboard />} />
+        <Route path="/admin-dashboard" element={<MainLayout><Layout /></MainLayout>} />
+        <Route path="/admin-dashboard/all-events" element={<MainLayout><AllEventsAdmin /></MainLayout>} />
+        <Route path="/admin-dashboard/manage-events" element={<MainLayout><ManageEvent /></MainLayout>} />
+        <Route path="/admin-dashboard/manage-users" element={<MainLayout><ManageUser /></MainLayout>} />
+        <Route path="/admin-dashboard/view-registrations" element={<MainLayout><ViewRegistrations /></MainLayout>} />
       </Routes>
     </Router>
   )
