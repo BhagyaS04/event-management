@@ -23,6 +23,9 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import LockIcon from '@mui/icons-material/Lock';
 import { useNavigate } from 'react-router-dom';
+import {motion} from 'framer-motion'
+import './Signup.css';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -107,47 +110,63 @@ const Signup = () => {
   const curvyTextStyle2 = {
     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
     fontSize: '2rem',
-    color: 'black',
+    color: 'white',
+  };
+
+  const onBackClick = () => {
+    navigate('/');
   };
 
   return (
-    <>
+    <motion.div className = 'signupBackgroundimg'
+    initial = {{width : 0}}
+    animate = {{width : "100vw"}}
+    exit = {{x : window.innerWidth}}
+    transition = {{duration : 0.5}}>
     <Box
       sx={{
         position: 'fixed',
         top: 0,
         left: 0,
-        width: '100%',
+        width: 10,
         height: '60px',
-        backgroundColor: '#0096FF',
+        backgroundColor: 'transparent',
         color: 'white',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.3)',
-        zIndex: 1200 // Ensure it's above other content
+        zIndex: 1200
       }}
     >
-      <Typography variant="h5" style = {curvyTextStyle2}>Event Manager</Typography>
+      <IconButton
+          onClick={onBackClick}
+          sx={{
+            position: 'absolute',
+            left: '10px',
+            color: 'white',
+          }}
+        >
+          <ArrowBackIcon />
+        </IconButton>
+      {/* <Typography variant="h5" style = {curvyTextStyle2}>Event Manager</Typography> */}
     </Box>
-      <Box
+      <Box 
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
+          justifyContent: 'top',
           alignItems: 'center',
-          height: '100vh'
+          height: 900
         }}
       >
-        <Box sx={{ textAlign: 'center', mb: 4, mt: 7 }}>
-          <Typography variant="h2" component="h1" color="black" style={{ fontFamily: '"Pacifico", cursive', fontSize: '2rem' }}>
+        <Box sx={{ textAlign: 'center', mb: 4, mt : 1 }}>
+          <Typography variant="h2" component="h1" color="white" style={{ fontFamily: '"Pacifico", cursive', fontSize: '2rem' }}>
             Stay in the loop! Sign up now!
           </Typography>
         </Box>
-        <Box
+        <Box className = 'SignupBox'
           sx={{
-            border: '2px solid blue',
-            backgroundColor: '#d3d3d3',
+            border: '1px solid black',
             borderRadius: 10,
             height: 'auto',
             width: 400,
@@ -157,7 +176,7 @@ const Signup = () => {
             alignItems: 'center'
           }}
         >
-          <h2 style={{ color: 'black' }}>Sign up</h2>
+          <h2 style={{ color: 'white' }}>Sign up</h2>
           <Stack direction="column" spacing={2}>
             <TextField
               label="Name"
@@ -167,17 +186,17 @@ const Signup = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <AccountCircle sx={{ color: 'black' }} />
+                    <AccountCircle sx={{ color: 'gray' }} />
                   </InputAdornment>
                 ),
-                style: { color: 'black' }
+                style: { color: 'gray' }
               }}
-              InputLabelProps={{ style: { color: 'black' } }}
+              InputLabelProps={{ style: { color: 'gray' } }}
               sx={{
                 width: 250,
                 '& .MuiInput-underline:before': { borderBottomColor: 'black' },
                 '& .MuiInput-underline:hover:before': { borderBottomColor: 'teal' },
-                '& .MuiInput-underline:after': { borderBottomColor: 'blue' }
+                '& .MuiInput-underline:after': { borderBottomColor: 'gray' }
               }}
               variant="standard"
             />
@@ -189,17 +208,17 @@ const Signup = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <EmailIcon sx={{ color: 'black' }} />
+                    <EmailIcon sx={{ color: 'gray' }} />
                   </InputAdornment>
                 ),
                 style: { color: 'black' }
               }}
-              InputLabelProps={{ style: { color: 'black' } }}
+              InputLabelProps={{ style: { color: 'gray' } }}
               sx={{
                 width: 250,
                 '& .MuiInput-underline:before': { borderBottomColor: 'black' },
                 '& .MuiInput-underline:hover:before': { borderBottomColor: 'teal' },
-                '& .MuiInput-underline:after': { borderBottomColor: 'blue' }
+                '& .MuiInput-underline:after': { borderBottomColor: 'gray' }
               }}
               variant="standard"
             />
@@ -211,17 +230,17 @@ const Signup = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <EmailIcon sx={{ color: 'black' }} />
+                    <EmailIcon sx={{ color: 'gray' }} />
                   </InputAdornment>
                 ),
                 style: { color: 'black' }
               }}
-              InputLabelProps={{ style: { color: 'black' } }}
+              InputLabelProps={{ style: { color: 'gray' } }}
               sx={{
                 width: 250,
                 '& .MuiInput-underline:before': { borderBottomColor: 'black' },
                 '& .MuiInput-underline:hover:before': { borderBottomColor: 'teal' },
-                '& .MuiInput-underline:after': { borderBottomColor: 'blue' }
+                '& .MuiInput-underline:after': { borderBottomColor: 'gray' }
               }}
               variant="standard"
             />
@@ -234,24 +253,24 @@ const Signup = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <LockIcon sx={{ color: 'black' }} />
+                    <LockIcon sx={{ color: 'gray' }} />
                   </InputAdornment>
                 ),
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton onClick={handleClickShowPassword} edge="end">
-                      {showPassword ? <VisibilityOffIcon sx={{ color: 'black' }} /> : <VisibilityIcon sx={{ color: 'black' }} />}
+                      {showPassword ? <VisibilityOffIcon sx={{ color: 'gray' }} /> : <VisibilityIcon sx={{ color: 'gray' }} />}
                     </IconButton>
                   </InputAdornment>
                 ),
-                style: { color: 'black' }
+                style: { color: 'gray' }
               }}
-              InputLabelProps={{ style: { color: 'black' } }}
+              InputLabelProps={{ style: { color: 'gray' } }}
               sx={{
                 width: 250,
                 '& .MuiInput-underline:before': { borderBottomColor: 'black' },
                 '& .MuiInput-underline:hover:before': { borderBottomColor: 'teal' },
-                '& .MuiInput-underline:after': { borderBottomColor: 'blue' }
+                '& .MuiInput-underline:after': { borderBottomColor: 'gray' }
               }}
               variant="standard"
             />
@@ -264,31 +283,31 @@ const Signup = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <LockIcon sx={{ color: 'black' }} />
+                    <LockIcon sx={{ color: 'gray' }} />
                   </InputAdornment>
                 ),
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton onClick={handleClickShowPassword} edge="end">
-                      {showPassword ? <VisibilityOffIcon sx={{ color: 'black' }} /> : <VisibilityIcon sx={{ color: 'black' }} />}
+                      {showPassword ? <VisibilityOffIcon sx={{ color: 'gray' }} /> : <VisibilityIcon sx={{ color: 'gray' }} />}
                     </IconButton>
                   </InputAdornment>
                 ),
-                style: { color: 'black' }
+                style: { color: 'gray' }
               }}
-              InputLabelProps={{ style: { color: 'black' } }}
+              InputLabelProps={{ style: { color: 'gray' } }}
               sx={{
                 width: 250,
                 '& .MuiInput-underline:before': { borderBottomColor: 'black' },
                 '& .MuiInput-underline:hover:before': { borderBottomColor: 'teal' },
-                '& .MuiInput-underline:after': { borderBottomColor: 'blue' }
+                '& .MuiInput-underline:after': { borderBottomColor: 'gray' }
               }}
               variant="standard"
             />
             <FormControlLabel
-              control={<Checkbox checked={isChecked} onChange={handleCheckboxChange} />}
+              control={<Checkbox checked={isChecked} onChange={handleCheckboxChange} style = {{color : 'gray'}}/>}
               label={
-                <span style={{ fontSize: '0.75rem', color: 'black' }}>
+                <span style={{ fontSize: '0.75rem', color: 'gray' }}>
                   I agree to the{' '}
                   <Link href="#" onClick={showTermsModal} color="primary" underline="hover">
                     terms and conditions
@@ -296,9 +315,11 @@ const Signup = () => {
                 </span>
               }
             />
+          <Typography variant = 'h6' component = 'h6' color = 'gray' style = {{ fontSize : '0.75rem'}}>Agree to the terms to sign in</Typography>
+
             <FormControlLabel
-              control={<Checkbox />}
-              label={<span style={{ fontSize: '0.75rem', color: 'black' }}>Stay in the loop with email updates!</span>}
+              control={<Checkbox style = {{color : 'gray'}} />}
+              label={<span style={{ fontSize: '0.75rem', color: 'gray' }}>Stay in the loop with email updates!</span>}
             />
             <Button
               variant="contained"
@@ -310,7 +331,7 @@ const Signup = () => {
             </Button>
             <Box sx={{ mt: 2, textAlign: 'center' }}>
               <Link href="/login" color="primary" underline="hover">
-                Back to login
+                Already a member? Login here
               </Link>
             </Box>
           </Stack>
@@ -340,7 +361,7 @@ const Signup = () => {
           </DialogActions>
         </Dialog>
       </Box>
-    </>
+    </motion.div>
   );
 };
 

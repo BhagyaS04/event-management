@@ -1,5 +1,9 @@
 import React from 'react';
+import { useState } from 'react';
 import './UpcomingEvent.css'
+import { useNavigate } from 'react-router-dom';
+import { Modal, Box, Typography, Link, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 function EventCard(props) {
@@ -24,7 +28,24 @@ function EventCard(props) {
   );
 }
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
 function UpcomingEvents() {
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const events = [
     {
       title: 'Sri Lankan Microsoft BizApps Monthly Meetup - July 2024',
@@ -60,6 +81,10 @@ function UpcomingEvents() {
     },
   ];
 
+  const handleNavigateToSignup = () => {
+    navigate('/signup');
+  };
+
   return (
     <div className="upcoming-events">
       <h2>Upcoming online events</h2>
@@ -73,10 +98,39 @@ function UpcomingEvents() {
             hostedBy={event.hostedBy}
             date={event.date}
             going={event.going}
+            onClick={handleOpen}
           />
         ))}
       </div>
-      <button>See all events</button>
+      <button onClick={handleOpen}>See all events</button>
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
+        <Box sx={style}>
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <Typography id="modal-title" variant="h6" component="h2">
+            Sign in to view more
+          </Typography>
+          <Typography id="modal-description" sx={{ mt: 2 }}>
+            Please <Link href="/signup" onClick={handleNavigateToSignup}>sign up</Link> to view more details about the event.
+          </Typography>
+        </Box>
+      </Modal>
     </div>
   );
 }
