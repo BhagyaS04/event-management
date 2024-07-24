@@ -1,18 +1,19 @@
+require('dotenv').config()
+
 const express = require('express');
 const cors=require('cors')
 const app = new express;
-const PORT = 4000;
-const eventModel = require('./model/eventData');
+const userModel = require('./model/userData');
 
 require('./connection');
 
 app.use(cors())
 app.use(express.json())
 
-app.get('/events', async(req, res)=>{
+app.get('/users', async(req, res)=>{
     console.log('inside')
     try{
-        const data = await eventModel.find();
+        const data = await userModel.find();
         console.log(data)
         res.send(data);
         
@@ -22,6 +23,6 @@ app.get('/events', async(req, res)=>{
     }
 })
 
-app.listen(PORT, ()=>{
-    console.log('Server is running on PORT 4000');
+app.listen(process.env.PORT, ()=>{
+    console.log('Server is running on PORT',process.env.PORT);
 })
