@@ -8,18 +8,230 @@
     display : flex;
     justify-content: center;
     align-items: center;
+    backdrop-filter: blur(15px);
+    z-index : 1;
 }
+
 
 .popup-inner {
     position : relative;
     padding : 32px;
     width : 100%;
-    max-width : 640px;
-    background-color: black;
+    height : 100%;
+    max-height: 80vh;
+    max-width : 65vw;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(15px);
+    border-radius: 50px;
+    /* background: radial-gradient(ellipse, rgba(0, 0, 0, 1) 200px, rgba(0, 0, 0, 0.3) 70%, rgba(0, 0, 0, 0) 90%); */
+    /* content: '';
+    position: absolute;
+    background-image: url('https://images.pexels.com/photos/4914160/pexels-photo-4914160.jpeg?cs=srgb&dl=pexels-alex-qian-1180283-4914160.jpg&fm=jpg');
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    background-blend-mode: multiply; */
+    
 }
 
-.popup-inner .close-btn {
+/* .popup-inner .close-btn {
     position : absolute;
-    top : 16px;
-    right : 16px;
-}
+    top : 26px;
+    left : 26px;
+    border-radius: 50px;
+} */
+
+.button {
+    position: absolute;
+    width: 1em;
+    height: 1em;
+    border: none;
+    background: rgba(180, 83, 107, 0.11);
+    border-radius: 5px;
+    transition: background 0.5s;
+    top : 15px;
+    right : 26px
+  }
+  
+  .X {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1em;
+    height: 1.5px;
+    background-color: rgb(255, 255, 255);
+    transform: translateX(-50%) rotate(45deg);
+  }
+  
+  .Y {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1em;
+    height: 1.5px;
+    background-color: #fff;
+    transform: translateX(-50%) rotate(-45deg);
+  }
+  
+  .close {
+    position: absolute;
+    display: flex;
+    padding: 0.8rem 1.5rem;
+    align-items: center;
+    justify-content: center;
+    transform: translateX(-50%);
+    top: 100%;
+    left: 50%;
+    width: 3em;
+    height: 1.7em;
+    font-size: 12px;
+    background-color: rgb(0,0,0);
+    color: rgb(187, 229, 236);
+    border: none;
+    border-radius: 10px;
+    pointer-events: none;
+    opacity: 0;
+  }
+  
+  .button:hover {
+    background-color: rgb(93, 93, 93);
+  }
+  
+  .button:active {
+    background-color: rgb(0, 0, 0);
+  }
+  
+  .button:hover > .close {
+    animation: close 0.2s forwards 0.25s;
+  }
+  
+  @keyframes close {
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  .commentHeader {
+    position : absolute;
+    left : 100px;
+  }
+  .commentBox {
+    position : absolute;
+    bottom : 20px;
+    right : 50px;
+    border-left: 1px solid #494e51;
+    height : 450px;
+    width : 250px;
+  }
+
+  .send-button {
+    position: absolute;
+    bottom : 10px;
+    right: -35px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  
+  .send-icon {
+    color: #ffffff; 
+  }
+
+  .input-container {
+    position : absolute;
+    left : 25px;
+    bottom :0px
+  }
+
+  .like-wrapper {
+    --gap: 0.5em;
+    --radius: 0.35em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    --dot-bg: #212121;
+    --dot-color: #313131;
+    --dot-size: 1px;
+    --dot-space: 22px;
+    background: linear-gradient(
+          90deg,
+          var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
+          transparent 1%
+        )
+        center / var(--dot-space) var(--dot-space),
+      linear-gradient(
+          var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
+          transparent 1%
+        )
+        center / var(--dot-space) var(--dot-space),
+      var(--dot-color);
+    border: 0.1em solid #313131;
+    padding: 0.5em;
+    border-radius: var(--radius);
+    box-shadow: 0 0 1em 0.5em rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    width: 120px;
+    height: 45px;
+    position: fixed;
+    bottom: 20px;
+    left: 62%; 
+    transform: translateX(-50%); 
+  }
+  
+  .check {
+    display: none;
+  }
+  
+  .container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    height: 100%;
+    width: 100%; 
+  }
+  
+  .icon {
+    width: 1.5em;
+    height: 1.5em;
+    margin-left: 0.5em;
+    stroke: gray;
+    stroke-width: 1px;
+    fill: none;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .icon.active {
+    fill: #f52121;
+    stroke: #f52121;
+  }
+  
+  .like-text {
+    margin-left: 0.5em;
+    padding: 0.25em;
+    color: white;
+    font-family: Arial, sans-serif;
+    font-weight: bolder;
+    font-size: 0.9em;
+  }
+  
+  @keyframes wiggle {
+    0%, 100% {
+      transform: rotate(0deg);
+    }
+    25% {
+      transform: rotate(-10deg);
+    }
+    50% {
+      transform: rotate(10deg);
+    }
+    75% {
+      transform: rotate(-10deg);
+    }
+  }
+

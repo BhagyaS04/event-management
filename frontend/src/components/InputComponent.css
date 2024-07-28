@@ -1,0 +1,19 @@
+.input {
+    border: none;
+    outline: none;
+    border-radius: 100px;
+    padding: 1em;
+    background-color: rgba(0, 0, 0, 0.3);
+    box-shadow: inset 2px 5px 10px rgba(0, 0, 0, 0.3);
+    transition: 300ms ease-in-out;
+    -webkit-appearance: none; /* Remove default styling on Safari */
+  -moz-appearance: none; /* Remove default styling on Firefox */
+  appearance: none;
+  }
+  
+  .input:focus {
+    background-color: rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+    /* box-shadow: 13px 13px 80px #969696, -1px -1px 10px rgba(0, 0, 0, 0.3); */
+  }
+  

@@ -8,12 +8,12 @@ const UserHome = () => {
   return (
     <div style={{
       width: '100vw',
-      height: '100vh', // Ensure the div takes the full viewport height
+      height: '100vh', 
       backgroundColor: '#36454F',
-      overflowX: 'hidden', // Hide horizontal scrollbar
-      overflowY: 'scroll', // Allow vertical scrolling
-      'msOverflowStyle': 'none',  // IE and Edge
-      scrollbarWidth: 'none',  // Firefox
+      overflowX: 'hidden',
+      overflowY: 'scroll',
+      'msOverflowStyle': 'none',
+      scrollbarWidth: 'none',
     }}>
       <UserNavbar />
       <TopPanelUser/>

@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { Typography, Box, Card, CardContent, CardMedia } from '@mui/material';
+import { Typography, Box, Card, CardContent, CardMedia, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import LikeButton from './LikeButton';
+import Popup from './Popup';
+import { useState } from 'react';
 
 const FloatingCard = styled(Card)(({ theme }) => ({
   transition: 'transform 0.5s ease',
@@ -10,7 +12,7 @@ const FloatingCard = styled(Card)(({ theme }) => ({
   '&:hover': {
     transform: 'translateY(10%) scale(1.2)',
     boxShadow: theme.shadows[8],
-    zIndex: 1,
+    zIndex: 0,
     '& .regButton': {
       opacity: 1,
     },
@@ -25,23 +27,23 @@ const cardStyle = {
   height: 300,
   margin: '0 10px',
   backgroundColor : 'black',
-  borderRadius : 5
+  borderRadius : 5,
+  zIndex: 0,
 };
 
 const Container = styled(Box)({
-  display: 'flex',
-  paddingLeft: 10,
-  width: '100%',
-  height : 370,
-  overflow: 'hidden',
-  overflowX: 'scroll',
-  '&::-webkit-scrollbar': {
-    display: 'none',
-  },
-  '-ms-overflow-style': 'none',
-  'scrollbar-width': 'none',
+    display: 'flex',
+    paddingLeft: 10,
+    width: '100%',
+    height : 370,
+    overflow: 'hidden',
+    overflowX: 'scroll',
+    '&::-webkit-scrollbar': {
+      display: 'none',
+    },
+    '-ms-overflow-style': 'none',
+    'scrollbar-width': 'none',
 });
-
 
 const Sec2 = () => {
   const navigate = useNavigate ()
@@ -67,9 +69,13 @@ const Sec2 = () => {
       ];
 
       const handleCardClick = () => {
-        
+        setButtonPopup (true)
       }
-  return (
+      const handleButtonClick = () => {
+        setButtonPopup (true)
+      }
+  const [buttonPopup, setButtonPopup] = useState (false)
+   return (
     <Box sx={{ paddingBottom: 0, borderBottom: '1px solid #71797E' }}>
       <Box
         sx={{
@@ -114,14 +120,21 @@ const Sec2 = () => {
                   Event {item}
                 </Typography>
                 <Typography variant = "h7" sx = {{ color : 'gray'}}>Event {item} to be conducted this month. Performed by artist {item} at Trivandrum. Register now!</  Typography>
-                <button className = 'regButton' onClick = {onRegClick}>
-                  Register
-                </button>
+                <Box sx={{ marginTop: 2 }}>
+                  <Button className="regButton" onClick={handleButtonClick}>
+                    Register+
+                  </Button>
+                </Box>
               </div>
               </CardContent>
             </FloatingCard>
           </Box>
         ))}
+        <Popup trigger = {buttonPopup} setTrigger = {setButtonPopup}>
+      <Typography variant="h5" component="div">
+        Event 
+      </Typography>
+      </Popup>
       </Container>
     </Box>
   );

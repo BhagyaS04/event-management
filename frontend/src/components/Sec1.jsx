@@ -129,11 +129,11 @@ const App = () => {
             </FloatingCard>
           </Box>
         ))}
-        {/* <Popup trigger = {buttonPopup} setTrigger = {setButtonPopup}>
-      <Typography variant="h5" component="div">
-        Event {item}
-      </Typography>
-      </Popup> */}
+        <Popup trigger = {buttonPopup} setTrigger = {setButtonPopup}>
+          <Typography variant="h4" component="div" style = {{color : 'white'}}>
+            Event 
+          </Typography>
+        </Popup>
       </Container>
     </Box>
   );

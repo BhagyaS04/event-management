@@ -1,0 +1,47 @@
+.RegButton {
+    background-color: #313131;
+    border: 1px solid black;
+    padding: 5px;
+    position: absolute;
+    width: 10em;
+    height: 2.7em;
+    transition: 1s;
+    font-size: 17px;
+    border-radius: 0.4em;
+    bottom : 20px;
+    right : 450px
+  }
+  
+  .RegButton p {
+    position: absolute;
+    top: 0.5em;
+    left: 1.7em;
+    margin: 0;
+    padding: 0;
+    transition: 1s;
+    color: #fff;
+  }
+  
+  .RegButton .icon {
+    position: absolute;
+    top: 0.45em;
+    right: 0.5em;
+    opacity: 0;
+    transition: 1s;
+    height: 1em;
+    fill: #fff;
+  }
+  
+  .RegButton:hover p {
+    left: 0.5em;
+    color: #fff;
+  }
+  
+  .RegButton:hover .icon {
+    opacity: 1;
+  }
+  
+  .RegButton:hover {
+    background-color: #256dd3;
+  }
+  
