@@ -54,26 +54,73 @@ app.post('/users', (req, res) => {
 //       }
 //     });
 
+// app.post('/user-new', async (req, res) => {
+//     try{
+//         // console.log(req.body)
+//         const {email} = req.body;
+//         const userExists = await userModel.findOne({email});
+//         console.log ("printing val of userExists var:\n",userExists)
+//         if(userExists){
+//             console.log("Email already under use!");
+//             return res.status(400).json({message:"Email already under use!"});
+            
+//         } else {
+//             const data = req.body;
+//             const newUser = new userModel(data);
+//             const savedUser = await newUser.save();
+//             res.status(201).json({message: "User created successfully!"});
+//             // console.log({savedUser});
+//         }
+//     }catch(error){
+//         console.log(error)
+//     }
+// })
+
+app.post('/check-email', async (req, res) => {
+    try {
+        const { email } = req.body;
+        const userExists = await userModel.findOne({ email });
+        if (userExists) {
+            return res.status(200).json({ isAvailable: false });
+        }
+        return res.status(200).json({ isAvailable: true });
+    } catch (error) {
+        console.error('Error while checking email availability:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 app.post('/user-new', async (req, res) => {
-    try{
-        // console.log(req.body)
-        const {email} = req.body;
-        const userExists = await userModel.findOne({email});
-        console.log (userExists)
-        if(userExists){
-            console.log("Email already under use!");
-            return res.status(400).json({message:"Email already under use!"});
-        } else {
+    try {
+        // console.log(req.body) 
+        const { email } = req.body;
+        const userExists = await userModel.findOne({ email });
+        console.log("printing val of userExists var:\n", userExists);
+        // if (userExists) {
+        //     console.log("Email already under use!");
+        //     return res.status(400).json({ message: "Email already under use!" });
+        // } else {
             const data = req.body;
             const newUser = new userModel(data);
             const savedUser = await newUser.save();
-            res.status(201).json({message: "User created successfully!"});
-            // console.log({savedUser});
+            res.status(201).json({ message: "User created successfully!" });
+            // console.log({ savedUser });
+        // }
+    } catch (error) {
+        if (error.code === 11000) {
+            // Handle duplicate key error
+            const duplicateField = Object.keys(error.keyValue)[0];
+            res.status(400).json({ message: `${duplicateField} already in use` });
         }
-    }catch(error){
-        console.log(error)
+
+        else {
+            
+        console.log("error while creating user after valid email availability\n",error);
+        res.status(500).json({ message: "Internal server error" });
+        }
     }
-})
+});
+
 
 app.listen(process.env.PORT, ()=>{
     console.log('Server is running on PORT',process.env.PORT);

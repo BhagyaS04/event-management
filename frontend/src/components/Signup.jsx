@@ -28,6 +28,8 @@ import './Signup.css';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import axios from 'axios';
 
+
+
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [passwordMismatch, setPasswordMismatch] = useState(false);
@@ -38,6 +40,9 @@ const Signup = () => {
   const [isChecked, setIsChecked] = useState(false);
   const navigate = useNavigate();
   const [wantMail, setWantMail] = useState (false);
+  // const [redirectToLogin, setRedirectToLogin] = useState(false);
+  const [emailExistsDialogOpen, setEmailExistsDialogOpen] = useState(false); // New state for email exists dialog
+
 
   const handleClickShowPassword = () => {
     setShowPassword(prev => !prev);
@@ -90,16 +95,63 @@ const Signup = () => {
     return true;
   };
 
-  const handleSubmit = () => {
-    if( validateForm ) {
+  const checkEmailAvailability = async (email) => {
+    try {
+      const response = await axios.post('http://localhost:4000/check-email', { email });
+      return response.data.isAvailable;
+    } catch (error) {
+      console.error('Error checking email availability:', error);
+      return false;
+    }
+  };
+  // const handleSubmit = () => {
+    
+  //   if( validateForm ) {
+  //     axios.post('http://localhost:4000/user-new', formData)
+  //     .then((res) => {
+  //       setDialogMessage('Sign up successful!');
+  //       setDialogOpen(true);
+      
+  //     }).catch((error) => {
+  //       // setDialogMessage('Error occured!');
+  //       // setDialogOpen (true)
+  //       const errorMessage = error.response?.data?.message || error.message;
+  //       if (errorMessage === "Email already under use!") {
+  //         setDialogMessage('Email already under use! Please login..');
+  //         // navigate('/login')
+  //       } else {
+  //         setDialogMessage(`Error occurred: ${errorMessage}`);
+  //       }
+  //       setDialogOpen(true);
+  //     })
+  //   } //if validateform close
+  // };
+
+  const handleSubmit = async () => {
+    if (validateForm()) {
+      const isEmailAvailable = await checkEmailAvailability(formData.email);
+  
+      if (!isEmailAvailable) {
+        // setDialogMessage('Email already under use!');
+        // setDialogOpen(true);
+        setEmailExistsDialogOpen(true); // Open the email exists dialog
+        // Uncomment the following line to navigate to the login page
+        // navigate('/login');
+        return;
+      }
+  
       axios.post('http://localhost:4000/user-new', formData)
-      .then((res) => {
-        setDialogMessage('Sign up successful!');
-        setDialogOpen(true);
-      }).catch((error) => {
-        setDialogMessage('Error occured!');
-        setDialogOpen (true)
-      })
+        .then((res) => {
+          setDialogMessage('Sign up successful!');
+          // setRedirectToLogin(true);
+          setDialogOpen(true);
+        })
+        .catch((error) => {
+          const errorMessage = error.response?.data?.message || error.message;
+          setDialogMessage(`Error occurred: ${errorMessage}`);
+          // setRedirectToLogin(false);
+          setDialogOpen(true);
+        });
     }
   };
 
@@ -110,6 +162,26 @@ const Signup = () => {
       setDialogOpen(false);
     }
   };
+  
+  // const handleDialogClose = () => {
+  //   setDialogOpen(false);
+  // };
+
+  // const handleOkClick = () => {
+  //   setDialogOpen(false);
+  //   navigate('/login');
+  // };
+
+  const handleEmailExistsDialogClose = () => {
+    setEmailExistsDialogOpen(false);
+  };
+
+  const handleEmailExistsDialogLogin = () => {
+    setEmailExistsDialogOpen(false);
+    navigate('/login');
+  };
+
+
 
   const showTermsModal = () => setTermsModalOpen(true);
   const hideTermsModal = () => setTermsModalOpen(false);
@@ -370,6 +442,38 @@ const Signup = () => {
             </Button>
           </DialogActions>
         </Dialog>
+        
+
+
+        
+        <Dialog open={emailExistsDialogOpen} onClose={handleEmailExistsDialogClose}>
+          <DialogTitle>Email Already Exists</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              The email you entered is already registered. Do you want to log in instead?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleEmailExistsDialogClose}>Cancel</Button>
+            <Button onClick={handleEmailExistsDialogLogin}>OK</Button>
+          </DialogActions>
+        </Dialog>
+        {/* <Dialog open={dialogOpen} onClose={handleDialogClose}>
+        <DialogTitle>{dialogMessage === 'Email already under use! Click ok to Login' ? 'Continue to Login?' : 'Error'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{dialogMessage}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleOkClick} color="primary">
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog> */}
+
+
       </Box>
     </motion.div>
   );
