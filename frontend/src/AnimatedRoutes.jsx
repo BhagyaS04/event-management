@@ -11,7 +11,7 @@ import Signup from './components/Signup'
 import MainLayout from './components/Mainlayout'
 import Home from './components/Home'
 import UpcomingEvent from './components/UpcomingEvent'
-import UserDashboard from './components/UserDashboard';
+import UserHome from './components/UserHome';
 
 import {AnimatePresence} from 'framer-motion'
 
@@ -25,7 +25,7 @@ const AnimatedRoutes = () => {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login setAuthenticated={setIsAuthenticated} />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path ='/user-dashboard' element = {<UserDashboard />} />
+        <Route path ='/user-dashboard' element = {<UserHome />} />
         <Route path="/admin-dashboard" element={<MainLayout><Layout /></MainLayout>} />
         <Route path="/admin-dashboard/all-events" element={<MainLayout><AllEventsAdmin /></MainLayout>} />
         <Route path="/admin-dashboard/manage-events" element={<MainLayout><ManageEvent /></MainLayout>} />

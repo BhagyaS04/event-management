@@ -26,6 +26,7 @@ import { useNavigate } from 'react-router-dom';
 import {motion} from 'framer-motion'
 import './Signup.css';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import axios from 'axios';
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -36,12 +37,15 @@ const Signup = () => {
   const [termsModalOpen, setTermsModalOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const navigate = useNavigate();
+  const [wantMail, setWantMail] = useState (false);
 
   const handleClickShowPassword = () => {
     setShowPassword(prev => !prev);
   };
 
   const handleCheckboxChange = (event) => {
+    setWantMail ('true')
+    console.log (wantMail)
     setIsChecked(event.target.checked);
   };
 
@@ -87,9 +91,15 @@ const Signup = () => {
   };
 
   const handleSubmit = () => {
-    if (validateForm()) {
-      setDialogMessage('Sign up successful!');
-      setDialogOpen(true);
+    if( validateForm ) {
+      axios.post('http://localhost:4000/user-new', formData)
+      .then((res) => {
+        setDialogMessage('Sign up successful!');
+        setDialogOpen(true);
+      }).catch((error) => {
+        setDialogMessage('Error occured!');
+        setDialogOpen (true)
+      })
     }
   };
 
@@ -176,7 +186,7 @@ const Signup = () => {
             alignItems: 'center'
           }}
         >
-          <h2 style={{ color: 'white' }}>Sign up</h2>
+          {/* <h2 style={{ color: 'white' }}>Sign up</h2> */}
           <Stack direction="column" spacing={2}>
             <TextField
               label="Name"
@@ -211,7 +221,7 @@ const Signup = () => {
                     <EmailIcon sx={{ color: 'gray' }} />
                   </InputAdornment>
                 ),
-                style: { color: 'black' }
+                style: { color: 'gray' }
               }}
               InputLabelProps={{ style: { color: 'gray' } }}
               sx={{
@@ -233,7 +243,7 @@ const Signup = () => {
                     <EmailIcon sx={{ color: 'gray' }} />
                   </InputAdornment>
                 ),
-                style: { color: 'black' }
+                style: { color: 'gray' }
               }}
               InputLabelProps={{ style: { color: 'gray' } }}
               sx={{

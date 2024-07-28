@@ -7,24 +7,53 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import './Login.css';
 import {motion} from 'framer-motion'
+import axios from 'axios';
 
 const Login = ({ setAuthenticated }) => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const [loginDialogMessage, setloginDialogMessage] = useState ('')
+
+// const checkDB = () => {
+
+// }
+
+  // const handleLogin = () => {
+  //   if (username === 'admin' && password === 'password') {
+  //     setAuthenticated(true);
+  //     navigate('/admin-dashboard');
+  //   } else if (username === 'user' && password === 'password') {
+  //     setAuthenticated(true);
+  //     navigate('/user-dashboard');
+  //   } else {
+  //     setOpen(true);
+  //   }
+  // };
 
   const handleLogin = () => {
-    if (username === 'admin' && password === 'password') {
-      setAuthenticated(true);
-      navigate('/admin-dashboard');
-    } else if (username === 'user' && password === 'password') {
-      setAuthenticated(true);
-      navigate('/user-dashboard');
-    } else {
+    axios.get('http://localhost:4000/users', {
+      email,
+      password
+    })
+    .then((res) => {
+      if (res.data) {
+        console.log(res.data.user); // assuming the server returns the user object
+        setloginDialogMessage('Logged in successfully!');
+        setOpen(true);
+        navigate('/user-dashboard');
+      } else {
+        setloginDialogMessage('Invalid email or password!');
+        setOpen(true);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      setloginDialogMessage('Error occurred!');
       setOpen(true);
-    }
+    });
   };
 
   const handleClose = () => {
@@ -108,8 +137,8 @@ const Login = ({ setAuthenticated }) => {
             id="standard-basic"
             label="Username or Email"
             variant="outlined"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             InputProps={{
               style: { color: 'white'},
             }}
@@ -174,10 +203,10 @@ const Login = ({ setAuthenticated }) => {
           </Box>
         </Stack>
         <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Login Error</DialogTitle>
+          <DialogTitle>{loginDialogMessage === 'Logged in successfully!' ? 'Success' : 'Error'}</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Incorrect credentials, please try again.
+              {loginDialogMessage}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
