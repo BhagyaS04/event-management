@@ -80,9 +80,9 @@ const TopPanelUser = () => {
       justifyContent: 'center', 
       padding: 2,
       paddingLeft: 10,
-      marginTop: -8,
+      marginTop: 4,
       marginBottom: 1,
-      borderBottom : '1px solid #71797E'
+      borderBottom : '1px solid #71797E',
     }}>
       <Typography variant='h2' style={curvyTextStyle}>
         Picked for you

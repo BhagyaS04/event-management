@@ -39,12 +39,17 @@ const Login = ({ setAuthenticated }) => {
       password
     })
     .then((res) => {
-      if (res.data) {
+      if (res.data && email != 'admin') {
         console.log(res.data.user); // assuming the server returns the user object
         setloginDialogMessage('Logged in successfully!');
         setOpen(true);
         navigate('/user-dashboard');
-      } else {
+      } else if (email === 'admin'){
+        setloginDialogMessage('Admin logged in successfully!');
+        setOpen(true);
+        navigate('/admin-dashboard');
+      } 
+      else {
         setloginDialogMessage('Invalid email or password!');
         setOpen(true);
       }
