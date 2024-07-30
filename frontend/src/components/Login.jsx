@@ -117,7 +117,12 @@ const Login = ({ setAuthenticated }) => {
       console.log('Response from server (res.data value):', res.data);
 
       const user = users.find(user => user.email === email);
-      const adminEmailPattern = /admin.*@.*\.(com|in)$/i;
+      // const adminEmailPattern = /admin.*@.*\.(com|in)$/i;
+
+      
+      //to avoid users whose name has 'admin' in it to login to admin portal
+      const adminEmailPattern = /^admin\..+@.+\.(com|in)$/i; //better version of admin mail pattern 
+
 
       if (user) {
         console.log('User found:', user);
