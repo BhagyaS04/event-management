@@ -5,7 +5,7 @@ import './InputComponent.css'
 import SendIcon from '@mui/icons-material/Send';
 import LikeComponent from './LikeComponent';
 import RegisterButton from './RegisterButton';
-import { Image } from 'antd';
+// import { Image } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
 
 

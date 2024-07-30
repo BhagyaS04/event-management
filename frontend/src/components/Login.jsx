@@ -16,6 +16,7 @@ const Login = ({ setAuthenticated }) => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const [loginDialogMessage, setloginDialogMessage] = useState ('')
+  const [dialogType, setDialogType] = useState('');
 
 // const checkDB = () => {
 
@@ -33,33 +34,130 @@ const Login = ({ setAuthenticated }) => {
   //   }
   // };
 
+  // const handleLogin = () => {
+  //   axios.get('http://localhost:4000/users', {
+  //     email,
+  //     password
+  //   })
+  //   .then((res) => {
+  //     if (res.data && email != 'admin') {
+
+  //       console.log("\ninside handleLogin fn in login.jsx\nprinting res.data.user\n")
+
+  //       console.log(res.data.user); // assuming the server returns the user object
+
+  //       //add login validation using db
+  //       setloginDialogMessage('Logged in successfully!');
+  //       setOpen(true);
+  //       navigate('/user-dashboard');
+
+
+  //     } else if (email === 'admin'){
+  //       setloginDialogMessage('Admin logged in successfully!');
+  //       setOpen(true);
+  //       navigate('/admin-dashboard');
+  //     } 
+  //     else {
+  //       setloginDialogMessage('Invalid email or password!');
+  //       setOpen(true);
+  //     }
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //     setloginDialogMessage('Error occurred!');
+  //     setOpen(true);
+  //   });
+  // };
+
+  // const handleLogin = () => {
+  //   axios.get('http://localhost:4000/users', {
+  //     params: { email }
+  //   })
+  //   .then((res) => {
+  //     console.log("printing value of res: ", res)
+  //     const user = res.data.user;
+  //     console.log("printing val of res.data.user:\n")
+  //     if (user) {
+  //       // Email exists, now check password
+  //       if (user.password === password) {
+  //         setloginDialogMessage('Logged in successfully!');
+  //         setOpen(true);
+  //         if (email === 'admin') {
+  //           navigate('/admin-dashboard');
+  //         } else {
+  //           navigate('/user-dashboard');
+  //         }
+  //       } else {
+  //         setloginDialogMessage('Invalid password!');
+  //         setOpen(true);
+  //       }
+  //     } else {
+  //       setloginDialogMessage('Email does not exist!');
+  //       setOpen(true);
+  //     }
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //     setloginDialogMessage('Error occurred!');
+  //     setOpen(true);
+  //   });
+  // };
+  
   const handleLogin = () => {
+    console.log(`Attempting to login with email: ${email}`);
     axios.get('http://localhost:4000/users', {
-      email,
-      password
+      params: { email }
     })
     .then((res) => {
-      if (res.data && email != 'admin') {
-        console.log(res.data.user); // assuming the server returns the user object
-        setloginDialogMessage('Logged in successfully!');
-        setOpen(true);
-        navigate('/user-dashboard');
-      } else if (email === 'admin'){
-        setloginDialogMessage('Admin logged in successfully!');
-        setOpen(true);
-        navigate('/admin-dashboard');
-      } 
-      else {
-        setloginDialogMessage('Invalid email or password!');
+      // const user = res.data.user;
+     const users = res.data;
+     
+
+      // console.log("printing value of res.data : ", res.data)
+      console.log('Response from server (res.data value):', res.data);
+
+      const user = users.find(user => user.email === email);
+      const adminEmailPattern = /admin.*@.*\.(com|in)$/i;
+
+      if (user) {
+        console.log('User found:', user);
+        // Email exists, now check password
+        if (user.password === password ) {
+          setloginDialogMessage('Logged in successfully!');
+          setOpen(true);
+
+          // if (email === 'admin@example.com') {
+          //   setDialogType('admin');
+          //   navigate('/admin-dashboard');
+          // } 
+          if (adminEmailPattern.test(email)){
+            setloginDialogMessage('Admin logged in successfully!');
+            setDialogType('admin');
+            navigate('/admin-dashboard');
+          }
+          else {
+            setDialogType('user');
+            navigate('/user-dashboard');
+          }
+        } else {
+          setloginDialogMessage('Invalid password!');
+          setDialogType('error');
+          setOpen(true);
+        }
+      } else {
+        setloginDialogMessage('Email does not exist!');
+        setDialogType('error');
         setOpen(true);
       }
     })
     .catch((error) => {
-      console.log(error);
+      console.error('Error during login request:', error);
       setloginDialogMessage('Error occurred!');
+      setDialogType('error');
       setOpen(true);
     });
   };
+
 
   const handleClose = () => {
     setOpen(false);
@@ -208,7 +306,11 @@ const Login = ({ setAuthenticated }) => {
           </Box>
         </Stack>
         <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>{loginDialogMessage === 'Logged in successfully!' ? 'Success' : 'Error'}</DialogTitle>
+        <DialogTitle>
+            {dialogType === 'admin' ? 'Admin Login' : dialogType === 'user' ? 'User Login' : 'Error'}
+          </DialogTitle>
+
+          {/* <DialogTitle>{loginDialogMessage === 'Admin logged in successfully!' ? 'Success' : 'Error'}</DialogTitle> */}
           <DialogContent>
             <DialogContentText>
               {loginDialogMessage}
