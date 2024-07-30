@@ -7,7 +7,7 @@ import LikeComponent from './LikeComponent';
 import RegisterButton from './RegisterButton';
 import { Image } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
+
 
 
 const Popup = (props) => {
@@ -53,7 +53,7 @@ const Popup = (props) => {
             {props.children}
             <Box className="commentBox">
               <div className='commentHeader'>
-                <Typography variant='h6' style={{ color: 'white' }}>Comments</Typography>
+                <Typography variant='h6' style={{ color: 'rgba(238, 238, 238, 0.5)' }}>Comments</Typography>
               </div>
               <div className="input-container">
                 <input

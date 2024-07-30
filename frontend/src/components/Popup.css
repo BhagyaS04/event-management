@@ -115,7 +115,10 @@
   
   .commentHeader {
     position : absolute;
-    left : 100px;
+    height : 70px;
+    background: linear-gradient(to bottom, rgb(0, 0, 0, 0.9), rgb(0, 0, 0, 0));
+    width : 120%;
+    left : 0px
   }
   .commentBox {
     position : absolute;

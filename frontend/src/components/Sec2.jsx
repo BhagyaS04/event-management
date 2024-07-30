@@ -54,7 +54,7 @@ const Sec2 = () => {
   const gradientStyle = {
     backgroundImage: 'linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)20%, rgba(0, 0, 0, 1))',
     width: '100%',
-    height: '200px',
+    height: '170px',
   };
 
 
@@ -93,7 +93,7 @@ const Sec2 = () => {
         </Typography>
       </Box>
       <Container>
-        {[1, 2, 3, 4, 5, 6, 7].map((item, index) => (
+        {['Charlie Puth', 'Alan Walker', 'Arijit Singh', 'Shreya Ghoshal', 'Drake', 'Justin Beiber', 'Sushin Shyam'].map((item, index) => (
           <Box onClick={() => handleCardClick(item)}>
             <FloatingCard key={item} sx={cardStyle}>
               <CardMedia
@@ -118,10 +118,10 @@ const Sec2 = () => {
                 }}
               >
               <div style = {gradientStyle}>
-                <Typography variant="h5" component="div">
-                  Event {item}
+                <Typography variant="h4" component="div" style={{ color: 'rgba(238, 238, 238, 0.5)'}}>
+                  {item}
                 </Typography>
-                <Typography variant = "h7" sx = {{ color : 'gray'}}>Event {item} to be conducted this month. Performed by artist {item} at Trivandrum. Register now!</  Typography>
+                <Typography variant = "h7" sx = {{ color : 'gray', fontSize : 'small'}}>Event {item} to be conducted this month. Performed by artist {item} at Trivandrum. Register now!</  Typography>
                 <Box sx={{ marginTop: 2 }}>
                   <Button className="regButton" onClick={handleButtonClick}>
                     Register+

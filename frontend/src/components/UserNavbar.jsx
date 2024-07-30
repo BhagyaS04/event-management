@@ -57,7 +57,7 @@ const UserNavbar = () => {
 
   return (
     <div>
-      <AppBar position="absolute" className = 'userAppbar' sx={{  backgroundColor : 'rgba(0, 0, 0, 0.7)', backdropFilter : 'blur(5px)', width: '100vw', boxShadow: '5px 5px 70px gray', borderBottom : '0px' }}>
+      <AppBar position="static" className = 'userAppbar' sx={{  backgroundColor : 'rgba(0, 0, 0, 0.7)', backdropFilter : 'blur(5px)', width: '100vw', boxShadow: '5px 5px 70px gray', borderBottom : '0px' }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />

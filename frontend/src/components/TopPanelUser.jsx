@@ -80,7 +80,7 @@ const TopPanelUser = () => {
       justifyContent: 'center', 
       padding: 2,
       paddingLeft: 10,
-      marginTop: 4,
+      marginTop: -7,
       marginBottom: 1,
       borderBottom : '1px solid #71797E',
     }}>
