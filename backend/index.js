@@ -5,7 +5,7 @@ const cors=require('cors')
 const app = express();
 const userModel = require('./model/userData');
 
-const eventModel = require('./model/eventData');
+// const eventModel = require('./model/eventData');
 
 
 require('./connection');
@@ -125,53 +125,50 @@ app.post('/user-new', async (req, res) => {
 });
 
 
-//making changes to add new events 
-app.get('/events', async(req, res)=>{
-    console.log('inside events')
-    try{
-        const data = await eventModel.find();
-        console.log(data);
-        res.send(data);
-    }
-    catch(error){
-        console.log("error")
-    }
-})
+// //making changes to add new events 
+// app.get('/events', async(req, res)=>{
+//     console.log('inside events')
+//     try{
+//         const data = await eventModel.find();
+//         console.log(data);
+//         res.send(data);
+//     }
+//     catch(error){
+//         console.log("error")
+//     }
+// })
 
-app.post('/event-new', async (req, res) => {
-    try {
-        // console.log(req.body) 
-        const { eventName } = req.body;
-        const eventExists = await eventModel.findOne({ eventName });
-        // console.log("printing val of eventExists var:\n", eventExists);
+// app.post('/event-new', async (req, res) => {
+//     try {
+//         // console.log(req.body) 
+//         const { eventName } = req.body;
+//         const eventExists = await eventModel.findOne({ eventName });
+//         // console.log("printing val of eventExists var:\n", eventExists);
 
-        // if (userExists) {
-        //     console.log("Email already under use!");
-        //     return res.status(400).json({ message: "Email already under use!" });
-        // } else {
-            const data = req.body;
-            const newEvent = new eventModel(data);
-            const savedEvent = await newEvent.save();
-            res.status(201).json({ message: "Event created successfully!" });
-            console.log({ savedEvent });
-        // }
-    } catch (error) {
-        if (error.code === 11000) {
-            // Handle duplicate key error
-            const duplicateField = Object.keys(error.keyValue)[0];
-            res.status(400).json({ message: `${duplicateField} already in use` });
-        }
+//         // if (userExists) {
+//         //     console.log("Email already under use!");
+//         //     return res.status(400).json({ message: "Email already under use!" });
+//         // } else {
+//             const data = req.body;
+//             const newEvent = new eventModel(data);
+//             const savedEvent = await newEvent.save();
+//             res.status(201).json({ message: "Event created successfully!" });
+//             console.log({ savedEvent });
+//         // }
+//     } catch (error) {
+//         if (error.code === 11000) {
+//             // Handle duplicate key error
+//             const duplicateField = Object.keys(error.keyValue)[0];
+//             res.status(400).json({ message: `${duplicateField} already in use` });
+//         }
 
-        else {
-        res.status(500).json({ message: "Internal server error" });
-        }
-    }
-});
+//         else {
+//         res.status(500).json({ message: "Internal server error" });
+//         }
+//     }
+// });
 
 app.listen(process.env.PORT, ()=>{
     console.log('Server is running on PORT',process.env.PORT);
 })
 
-// app.post ('/events', async (req, res) => {
-//     const 
-// })
