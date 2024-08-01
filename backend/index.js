@@ -168,6 +168,30 @@ app.post('/user-new', async (req, res) => {
 //     }
 // });
 
+app.get ('/events', async (req, res) => {
+    try {
+        const event = await eventData.find({},'eventName eventDate eventDesc eventLike');
+        console.log (event);
+        res.send (event)
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        res.status(500).json({ error: 'An error occurred while fetching events' });
+    }
+})
+
+app.post ('/new-events', async (req, res) => {
+    try {
+        const data = req.body;
+        const newEvent = new eventModel (data);
+        const savedEvent = await newEvent.save ();
+        res.status(201).json({ newEvent, message: "Event created successfully!" });
+    } catch (error) {
+        console.log("error while creating user after valid email availability\n",error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+})
+
+
 app.listen(process.env.PORT, ()=>{
     console.log('Server is running on PORT',process.env.PORT);
 })

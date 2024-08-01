@@ -4,7 +4,9 @@ import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import LikeButton from './LikeButton';
 import Popup from './Popup';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
 
 const FloatingCard = styled(Card)(({ theme }) => ({
   transition: 'transform 0.5s ease',
@@ -46,6 +48,12 @@ const Container = styled(Box)({
 });
 
 const Sec1 = () => {
+  // axios.get ('http://localhost:4000/events', { 
+  //   eventName,
+  //   eventDates,
+  //   eventDesc,
+  //   eventLikes
+  // })
   const navigate = useNavigate ()
   const onRegClick = () => {
     // navigate ('/')
@@ -75,8 +83,39 @@ const Sec1 = () => {
       const handleButtonClick = () => {
         setButtonPopup (true)
       }
-  const [buttonPopup, setButtonPopup] = useState (false)
-  const [selectedItem, setSelectedItem] = useState(null);
+      const [buttonPopup, setButtonPopup] = useState (false)
+      const [selectedItem, setSelectedItem] = useState(null);
+      const [eventNames, setEventNames] = useState ([])
+      const [allEvents, setAllEvents ] = useState ([])
+      const [eventDate, setEventDate] = useState ([])
+      const [eventDescs, setEventDescs] = useState ([])
+      const [eventLike, setEventLike] = useState ([])
+    
+      useEffect (() => {
+        const fetchEventDetails = async () => {
+          try {
+            const res = await axios.get ('http://localhost:4000/events')
+            console.log ("response data: ", res.data)
+            if (res.data) {
+              const mappedEvents = res.data.map(event => ({
+                id: event.id,
+                eventName: event.eventName,
+                eventDate : event.eventDate,
+                eventDesc : event.eventDesc,
+                eventLike : event.eventLike
+              }));
+              setAllEvents(mappedEvents);
+              console.log('Entered into eventNames:', allEvents);
+            } else {
+              console.error('Unexpected response data format:', res.data);
+            }
+          } catch (error) {
+            console.error('Error fetching event names:', error);
+          }
+        };
+        fetchEventDetails();
+      }, []);
+  
    return (
     <Box sx={{ paddingBottom: 0, borderBottom: '1px solid #71797E' }}>
       <Box
@@ -93,15 +132,16 @@ const Sec1 = () => {
         </Typography>
       </Box>
       <Container>
-        {['Charlie Puth', 'Alan Walker', 'Arijit Singh', 'Shreya Ghoshal', 'Drake', 'Justin Beiber', 'Sushin Shyam'].map((item, index) => (
-          <Box onClick={() => handleCardClick(item)}>
-            <FloatingCard key={item} sx={cardStyle}>
+      {/* ['Charlie Puth', 'Alan Walker', 'Arijit Singh', 'Shreya Ghoshal', 'Drake', 'Justin Beiber', 'Sushin Shyam'] */}
+      {allEvents.map(event => (
+          <Box onClick={() => handleCardClick(event.eventName)}>
+            <FloatingCard key={event.eventName} sx={cardStyle}>
               <CardMedia
                 component="img"
                 height="100%"
                 width="100%"
-                image={images[index]}
-                alt={`Event ${item}`}
+                image={images[event.id]}
+                alt={`Event ${event.eventName}`}
                 sx={{ objectFit: 'contain' }}
               />
               <CardContent
@@ -118,10 +158,12 @@ const Sec1 = () => {
                 }}
               >
               <div style = {gradientStyle}>
-                <Typography variant="h4" component="div" style={{ color: 'rgba(238, 238, 238, 0.5)'}}>
-                  {item}
+              <Typography variant="h4" component="div" style={{ color: 'rgba(238, 238, 238, 0.5)'}}>
+                  {event.eventName}
                 </Typography>
-                <Typography variant = "h7" sx = {{ color : 'gray', fontSize : 'small'}}>Event {item} to be conducted this month. Performed by artist {item} at Trivandrum. Register now!</  Typography>
+                <Typography variant = "h7" sx = {{ color : 'gray', fontSize : 'small'}}>{event.eventDesc}</Typography>
+                <br></br>
+                <Typography variant = "h7" sx = {{ color : 'gray', fontSize : 'small'}}>Date: </Typography>
                 <Box sx={{ marginTop: 2 }}>
                   <Button className="regButton" onClick={handleButtonClick}>
                     Register+
