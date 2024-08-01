@@ -90,6 +90,7 @@ const Sec1 = () => {
       const [eventDate, setEventDate] = useState ([])
       const [eventDescs, setEventDescs] = useState ([])
       const [eventLike, setEventLike] = useState ([])
+      const [eventData, setEventData] = useState ([])
     
       useEffect (() => {
         const fetchEventDetails = async () => {
