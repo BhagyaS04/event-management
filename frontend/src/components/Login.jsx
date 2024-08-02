@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -22,17 +23,17 @@ const Login = ({ setAuthenticated }) => {
 
 // }
 
-const handleLogin = () => {
-  if (email === 'admin' && password === 'password') {
-    setAuthenticated(true);
-    navigate('/admin-dashboard');
-  } else if (email === 'user' && password === 'password') {
-    setAuthenticated(true);
-    navigate('/user-dashboard');
-  } else {
-    setOpen(true);
-    }
-  };
+  // const handleLogin = () => {
+  //   if (username === 'admin' && password === 'password') {
+  //     setAuthenticated(true);
+  //     navigate('/admin-dashboard');
+  //   } else if (username === 'user' && password === 'password') {
+  //     setAuthenticated(true);
+  //     navigate('/user-dashboard');
+  //   } else {
+  //     setOpen(true);
+  //   }
+  // };
 
   // const handleLogin = () => {
   //   axios.get('http://localhost:4000/users', {
@@ -41,10 +42,6 @@ const handleLogin = () => {
   //   })
   //   .then((res) => {
   //     if (res.data && email != 'admin') {
-  //       console.log(res.data.user); // assuming the server returns the user object
-  //       setloginDialogMessage('Logged in successfully!');
-  //       setOpen(true);
-  //       navigate('/user-dashboard');
 
   //       console.log("\ninside handleLogin fn in login.jsx\nprinting res.data.user\n")
 
@@ -72,6 +69,7 @@ const handleLogin = () => {
   //     setOpen(true);
   //   });
   // };
+
   // const handleLogin = () => {
   //   axios.get('http://localhost:4000/users', {
   //     params: { email }
@@ -106,6 +104,66 @@ const handleLogin = () => {
   //   });
   // };
   
+  // const handleLogin = () => {
+  //   console.log(`Attempting to login with email: ${email}`);
+  //   axios.get('http://localhost:4000/users', {
+  //     params: { email }
+  //   })
+  //   .then((res) => {
+  //     // const user = res.data.user;
+  //    const users = res.data;
+     
+
+  //     // console.log("printing value of res.data : ", res.data)
+  //     console.log('Response from server (res.data value):', res.data);
+
+  //     const user = users.find(user => user.email === email);
+  //     // const adminEmailPattern = /admin.@.\.(com|in)$/i;
+
+      
+  //     //to avoid users whose name has 'admin' in it to login to admin portal
+  //     const adminEmailPattern = /^admin\..+@.+\.(com|in)$/i; //better version of admin mail pattern 
+
+
+  //     if (user) {
+  //       console.log('User found:', user);
+  //       // Email exists, now check password
+  //       if (user.password === password ) {
+  //         setloginDialogMessage('Logged in successfully!');
+  //         setOpen(true);
+
+  //         // if (email === 'admin@example.com') {
+  //         //   setDialogType('admin');
+  //         //   navigate('/admin-dashboard');
+  //         // } 
+  //         if (adminEmailPattern.test(email)){
+  //           setloginDialogMessage('Admin logged in successfully!');
+  //           setDialogType('admin');
+  //           navigate('/admin-dashboard');
+  //         }
+  //         else {
+  //           setDialogType('user');
+  //           navigate('/user-dashboard');
+  //         }
+  //       } else {
+  //         setloginDialogMessage('Invalid password!');
+  //         setDialogType('error');
+  //         setOpen(true);
+  //       }
+  //     } else {
+  //       setloginDialogMessage('Email does not exist!');
+  //       setDialogType('error');
+  //       setOpen(true);
+  //     }
+  //   })
+  //   .catch((error) => {
+  //     console.error('Error during login request:', error);
+  //     setloginDialogMessage('Error occurred!');
+  //     setDialogType('error');
+  //     setOpen(true);
+  //   });
+  // };
+
   const handleLogin = () => {
     console.log(`Attempting to login with email: ${email}`);
     axios.get('http://localhost:4000/users', {
@@ -131,8 +189,14 @@ const handleLogin = () => {
         console.log('User found:', user);
         // Email exists, now check password
         if (user.password === password ) {
+          if (user.blocked) {
+            setloginDialogMessage('Access Denied! Your account has been blocked by admin!');
+            setDialogType('error');
+            setOpen(true);
+            return
+          } else {
           setloginDialogMessage('Logged in successfully!');
-          setOpen(true);
+          setOpen(true);}
 
           // if (email === 'admin@example.com') {
           //   setDialogType('admin');
@@ -165,6 +229,8 @@ const handleLogin = () => {
       setOpen(true);
     });
   };
+
+
 
 
   const handleClose = () => {

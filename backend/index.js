@@ -1,10 +1,11 @@
+
 require('dotenv').config()
 
 const express = require('express');
 const cors=require('cors')
 const app = express();
 const eventModel = require ('./model/eventData');
-const userData = require('./model/userData');
+const userModel = require('./model/userData');
 const eventData = require('./model/eventData');
 
 // const eventModel = require('./model/eventData');
@@ -115,7 +116,7 @@ app.post('/user-new', async (req, res) => {
         if (error.code === 11000) {
             // Handle duplicate key error
             const duplicateField = Object.keys(error.keyValue)[0];
-            res.status(400).json({ message: `${duplicateField} already in use` });
+            res.status(400).json({ message: `${duplicateField} already in use`});
         }
 
         else {
@@ -161,7 +162,7 @@ app.post('/user-new', async (req, res) => {
 //         if (error.code === 11000) {
 //             // Handle duplicate key error
 //             const duplicateField = Object.keys(error.keyValue)[0];
-//             res.status(400).json({ message: `${duplicateField} already in use` });
+//             res.status(400).json({ message: ${duplicateField} already in use });
 //         }
 
 //         else {
@@ -172,7 +173,7 @@ app.post('/user-new', async (req, res) => {
 
 app.get ('/events', async (req, res) => {
     try {
-        const event = await eventData.find({},'eventName eventDate eventDesc eventLike');
+        const event = await eventModel.find({},'eventName eventDates eventDesc eventLikes eventComments');
         console.log (event);
         res.send (event)
     } catch (error) {
@@ -181,7 +182,7 @@ app.get ('/events', async (req, res) => {
     }
 })
 
-app.post ('/new-events', async (req, res) => {
+app.post ('/event-new', async (req, res) => {
     try {
         const data = req.body;
         const newEvent = new eventModel (data);
@@ -193,8 +194,53 @@ app.post ('/new-events', async (req, res) => {
     }
 })
 
+//delete a user
+app.delete('/users/:id', async (req, res) => {
+    try {
+      await userModel.findByIdAndDelete(req.params.id);
+      res.send('User deleted');
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      res.status(500).send('Server error');
+    }
+  });
+  // Block a user
+app.patch('/users/:id/block', async (req, res) => {
+    try {
+      const user = await userModel.findByIdAndUpdate(
+        req.params.id,
+        { $set: { blocked: true } },
+        { new: true } // Return the updated document
+      );
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      res.json(user);
+    } catch (error) {
+      console.error('Error blocking user:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+  
+  // Unblock a user
+  app.patch('/users/:id/unblock', async (req, res) => {
+    try {
+      const user = await userModel.findByIdAndUpdate(
+        req.params.id,
+        { $set: { blocked: false } },
+        { new: true } // Return the updated document
+      );
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      res.json(user);
+    } catch (error) {
+      console.error('Error unblocking user:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
 
+  
 app.listen(process.env.PORT, ()=>{
     console.log('Server is running on PORT',process.env.PORT);
 })
-
