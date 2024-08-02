@@ -22,17 +22,17 @@ const Login = ({ setAuthenticated }) => {
 
 // }
 
-  // const handleLogin = () => {
-  //   if (username === 'admin' && password === 'password') {
-  //     setAuthenticated(true);
-  //     navigate('/admin-dashboard');
-  //   } else if (username === 'user' && password === 'password') {
-  //     setAuthenticated(true);
-  //     navigate('/user-dashboard');
-  //   } else {
-  //     setOpen(true);
-  //   }
-  // };
+const handleLogin = () => {
+  if (email === 'admin' && password === 'password') {
+    setAuthenticated(true);
+    navigate('/admin-dashboard');
+  } else if (email === 'user' && password === 'password') {
+    setAuthenticated(true);
+    navigate('/user-dashboard');
+  } else {
+    setOpen(true);
+    }
+  };
 
   // const handleLogin = () => {
   //   axios.get('http://localhost:4000/users', {
@@ -41,6 +41,10 @@ const Login = ({ setAuthenticated }) => {
   //   })
   //   .then((res) => {
   //     if (res.data && email != 'admin') {
+  //       console.log(res.data.user); // assuming the server returns the user object
+  //       setloginDialogMessage('Logged in successfully!');
+  //       setOpen(true);
+  //       navigate('/user-dashboard');
 
   //       console.log("\ninside handleLogin fn in login.jsx\nprinting res.data.user\n")
 
@@ -68,7 +72,6 @@ const Login = ({ setAuthenticated }) => {
   //     setOpen(true);
   //   });
   // };
-
   // const handleLogin = () => {
   //   axios.get('http://localhost:4000/users', {
   //     params: { email }

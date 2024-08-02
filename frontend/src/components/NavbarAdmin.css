@@ -1,0 +1,38 @@
+
+.navbar-title {
+  margin-right: 2rem;
+  display: none;
+  font-family:Roboto, Helvetica, sans-serif;
+  font-weight: 70;
+  letter-spacing: .2rem;
+  flex-grow: 1;
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+  text-shadow: rgb(66, 66, 68);
+}
+
+.navbar-logo {
+  margin-right: 2rem;
+  display: flex;
+  flex-grow: 1;
+  font-family: monospace;
+  font-weight: 700;
+  letter-spacing: .3rem;
+  text-decoration: none;
+}
+
+.navbar-button {
+  margin-top: 2rem;
+  color: rgb(236, 233, 233);
+  display: block;
+}
+
+@media (min-width: 600px) {
+  .navbar-title {
+    display: flex;
+  }
+  
+  .navbar-logo {
+    display: none;
+  }
+}

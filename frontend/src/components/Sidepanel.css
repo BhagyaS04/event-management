@@ -1,0 +1,16 @@
+.sidepanel {
+    position: absolute;
+    top: 70px;
+    left: 0;
+    padding: 20px;
+    background-color: #212121; /* Dark gray background */
+    height: 128%;
+    width: 250px;
+    color: #f0f0f0; /* Light gray text color */
+    box-shadow: 0 2px 5px rgba(37, 33, 33, 0.1); /* Subtle shadow */
+  }
+  
+  .sidepanel-button {
+    text-transform: none; /* Remove default text-transform */
+    color: #f0f0f0;
+  }

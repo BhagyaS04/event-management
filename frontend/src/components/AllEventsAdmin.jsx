@@ -19,7 +19,7 @@ export default function AllEventsAdmin (){
           All Events
         </Typography>
         <nav aria-label="All Events">
-            <List sx = {{ width : 1000, backgroundColor : 'lightgray', borderRadius : '10px'}}>
+            <List sx = {{ width : 1000, backgroundColor : 'lightgray', borderRadius : '20px'}}>
             <ListItem>
         <Grid container spacing={2}>
           <Grid item xs={6}>
