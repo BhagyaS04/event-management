@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, IconButton } from '@mui/material';
 import './ManageEvent.css';
-// import { useState } from 'react';
+import axios from 'axios';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-// just trying out. incomplete code..
 const ManageEvent = () => {
   const [open, setOpen] = useState(false);
   const [eventName, setEventName] = useState('');
-  const [eventDate, setEventDate] = useState('');
-  const [eventDescription, setEventDescription] = useState('');
-  const [events, setEvents] = useState([]);
+  const [eventDates, setEventDates] = useState('');
+  const [eventDesc, setEventDesc] = useState('');
+  const [eventPoster, setEventPoster] = useState ('')
+  const [allEvents, setAllEvents] = useState([]);
+  const [editEventId, setEditEventId] = useState(null);
+  const [editOpen, setEditOpen] = useState(false);
+  const [selectedEventId, setSelectedEventId] = useState (null)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState (false)
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -19,17 +25,91 @@ const ManageEvent = () => {
     setOpen(false);
   };
 
+  const handleEditClose = () => {
+    setEditOpen(false);
+  };
+
   const handleAddEvent = () => {
     const newEvent = {
-      name: eventName,
-      date: eventDate,
-      description: eventDescription,
+      eventName: eventName,
+      eventDates: eventDates,
+      eventDesc: eventDesc,
+      eventPoster : eventPoster
     };
-    setEvents([...events, newEvent]);
-    setOpen(false);
-    setEventName('');
-    setEventDate('');
-    setEventDescription('');
+
+    axios.post('http://localhost:4000/event-new', newEvent)
+      .then(response => {
+        setAllEvents([...allEvents, response.data]);
+        setOpen(false);
+        setEventName('');
+        setEventDates('');
+        setEventDesc('');
+        setEventPoster('')
+      })
+      .catch(error => {
+        console.error("Error adding event:", error);
+      });
+  };
+
+  const fetchAllEvents = async () => {
+    try {
+      const res = await axios.get('http://localhost:4000/events');
+      if (res.data) {
+        setAllEvents(res.data);
+      } else {
+        console.error('Unexpected response data format:', res.data);
+      }
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllEvents();
+  }, []);
+
+  const handleDeleteEvent = (eventId) => {
+    axios.delete(`http://localhost:4000/events/${eventId}`)
+      .then(() => {
+        setAllEvents(allEvents.filter(event => event._id !== eventId));
+      })
+      .catch(error => {
+        console.error("Error deleting event:", error);
+      });
+  };
+  const DeleteDialog = (eventId) => {
+    setSelectedEventId (eventId)
+    setDeleteDialogOpen (true)
+  }
+  const handleEditEvent = () => {
+    const updatedEvent = {
+      eventName,
+      eventDates,
+      eventDesc,
+    };
+
+    axios.put(`http://localhost:4000/events/${editEventId}`, updatedEvent)
+      .then(response => {
+        const updatedEvents = allEvents.map(event =>
+          event._id === editEventId ? response.data : event
+        );
+        setAllEvents(updatedEvents);
+        setEditOpen(false);
+        setEventName('');
+        setEventDates('');
+        setEventDesc('');
+      })
+      .catch(error => {
+        console.error("Error updating event:", error);
+      });
+  };
+
+  const handleOpenEditDialog = (event) => {
+    setEditEventId(event._id);
+    setEventName(event.eventName);
+    setEventDates(event.eventDates);
+    setEventDesc(event.eventDesc);
+    setEditOpen(true);
   };
 
   return (
@@ -38,12 +118,10 @@ const ManageEvent = () => {
       <div className="content"> {/* Wrap content in a div for styling */}
         <h1>Manage Events</h1>
         <div className="manage-event-buttons">
-          <button className="manage-event-button" onClick={handleClickOpen}>Add Events</button>
-          <button className="manage-event-button">Delete Events</button>
-          <button className="manage-event-button">Edit Events</button>
-        </div >
+          <button className="manage-event-button" onClick={handleClickOpen}>Add Event +</button>
+        </div>
         <Dialog open={open} onClose={handleClose} className="custom-dialog">
-        <DialogTitle className="dialog-title">Add Event</DialogTitle>
+          <DialogTitle className="dialog-title">Add Event</DialogTitle>
           <DialogContent className="dialog-content">
             <TextField
               autoFocus
@@ -64,8 +142,8 @@ const ManageEvent = () => {
                 shrink: true,
               }}
               className="text-field"
-              value={eventDate}
-              onChange={(e) => setEventDate(e.target.value)}
+              value={eventDates}
+              onChange={(e) => setEventDates(e.target.value)}
             />
             <TextField
               margin="dense"
@@ -75,8 +153,18 @@ const ManageEvent = () => {
               multiline
               rows={4}
               className="text-field"
-              value={eventDescription}
-              onChange={(e) => setEventDescription(e.target.value)}
+              value={eventDesc}
+              onChange={(e) => setEventDesc(e.target.value)}
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Event poster"
+              type="text"
+              fullWidth
+              className="text-field"
+              value={eventPoster}
+              onChange={(e) => setEventPoster(e.target.value)}
             />
           </DialogContent>
           <DialogActions>
@@ -84,42 +172,91 @@ const ManageEvent = () => {
             <Button onClick={handleAddEvent}>Add</Button>
           </DialogActions>
         </Dialog>
+        <Dialog open={editOpen} onClose={handleEditClose} className="custom-dialog">
+          <DialogTitle className="dialog-title">Edit Event</DialogTitle>
+          <DialogContent className="dialog-content">
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Event Name"
+              type="text"
+              fullWidth
+              className="text-field"
+              value={eventName}
+              onChange={(e) => setEventName(e.target.value)}
+            />
+            <TextField
+              margin="dense"
+              label="Event Date"
+              type="date"
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+              }}
+              className="text-field"
+              value={eventDates}
+              onChange={(e) => setEventDates(e.target.value)}
+            />
+            <TextField
+              margin="dense"
+              label="Description"
+              type="text"
+              fullWidth
+              multiline
+              rows={4}
+              className="text-field"
+              value={eventDesc}
+              onChange={(e) => setEventDesc(e.target.value)}
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Event poster"
+              type="text"
+              fullWidth
+              className="text-field"
+              value={eventPoster}
+              onChange={(e) => setEventPoster(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleEditClose}>Cancel</Button>
+            <Button onClick={handleEditEvent}>Edit</Button>
+          </DialogActions>
+        </Dialog>
         <div className="event-list">
           <h2>Event List</h2>
-          {events.length === 0 ? (
+          {allEvents.length === 0 ? (
             <p>No events added yet.</p>
           ) : (
-            <ul>
-              {events.map((event, index) => (
-                <li key={index}>
-                  <h3>{event.name}</h3>
-                  <p><strong>Date:</strong> {event.date}</p>
-                  <p><strong>Description:</strong> {event.description}</p>
-                </li>
+            <div className="event-items">
+              {allEvents.map(event => (
+                <div className="event-item" key={event._id} style={{
+                  backgroundColor: 'skyblue',
+                  marginBottom: '10px',
+                  padding: '16px',
+                  borderRadius: '10px',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
+                }}>
+                  <h3>{event.eventName}</h3>
+                  <p><strong>Date:</strong> {event.eventDates}</p>
+                  <p><strong>Description:</strong> {event.eventDesc}</p>
+                  <div className="event-actions">
+                    <IconButton onClick={() => handleOpenEditDialog(event)}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleDeleteEvent(event._id)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </div>
+                </div>
               ))}
-            </ul>
+            </div>
           )}
         </div>
       </div>
     </div>
   );
-
-  // const [formData, setFormData] = useState({ eventName: '', eventdates: '', eventDesc: '', eventLikes: '' });
-
-  // //dont remove this axios fn. if needed, comment it.
-  // const handleAddEvent = async () => {
-  //   axios.post('/event-new', formData)
-  //   .then((res)=>{
-  //     console.log("Event Added successfully")
-  //   }).catch((error)=>{
-  //     console.log("error adding event")
-  //   })
-  // }
-  return (
-    <div>
-    Manage Events
-    </div>
-  )
-}
+};
 
 export default ManageEvent;

@@ -82,7 +82,7 @@ const NavbarAdmin = () => {
 
   return (
     <>
-      <AppBar position="absolute" sx={{ backgroundColor: '#242424' }}>
+      <AppBar position="absolute" sx={{ backgroundColor: '#242424', height : 70 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 8 }} />

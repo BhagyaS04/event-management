@@ -194,6 +194,37 @@ app.post ('/event-new', async (req, res) => {
     }
 })
 
+app.delete('/events/:id', (req, res) => {
+  const eventId = req.params.id;
+  eventModel.findByIdAndDelete(eventId)
+    .then(result => {
+      if (!result) {
+        return res.status(404).send("Event not found");
+      }
+      res.status(200).send("Event deleted");
+    })
+    .catch(error => {
+      console.error("Error deleting event:", error);
+      res.status(500).send("Error deleting event");
+    });
+});
+
+app.put('/events/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const updatedEvent = req.body;
+    const event = await eventModel.findByIdAndUpdate(id, updatedEvent, { new: true });
+    if (!event) {
+      res.status(404).send({ message: 'Event not found' });
+    } else {
+      res.send(event);
+    }
+  } catch (error) {
+    console.error("Error updating event:", error);
+    res.status(500).send({ message: 'Error updating event' });
+  }
+});
+
 //delete a user
 app.delete('/users/:id', async (req, res) => {
     try {

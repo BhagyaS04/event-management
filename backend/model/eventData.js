@@ -4,8 +4,10 @@ const eventSchema=mongoose.Schema({
     eventName:String,
     eventDates:String,
     eventDesc : String,
+    eventPoster: String,
     eventLikes : String,
-    eventComments: Array
+    eventComments: Array,
+
 })
 
 const EventData=mongoose.model('event',eventSchema); 

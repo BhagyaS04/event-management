@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -14,24 +14,29 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 import ConfirmationDialog from './ConfirmationDialog';
+import { Link } from 'react-router-dom';
 
-const pages = ['Dashboard', 'All Events', 'Your registrations'];
+const pages = [{ name: 'Dashboard', path: '/user-dashboard' }, 
+  {name : 'All Events', path : '/user-dashboard'}, 
+  {name:'Your registrations', path : '/user-dashboard'},];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const UserNavbar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [isAvatarVisible, setIsAvatarVisible] = useState(true);
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
 
   const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
+    // Hide the avatar button and navigate to the profile page
+    setIsAvatarVisible(false);
+    navigate('/user-edit-profile');
   };
 
   const handleCloseNavMenu = () => {
@@ -57,7 +62,7 @@ const UserNavbar = () => {
 
   return (
     <div>
-      <AppBar position="static" className = 'userAppbar' sx={{  backgroundColor : 'rgba(0, 0, 0, 0.7)', backdropFilter : 'blur(5px)', width: '100vw', boxShadow: '5px 5px 70px gray', borderBottom : '0px' }}>
+      <AppBar position="static" className='userAppbar' sx={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(5px)', width: '100vw', boxShadow: '5px 5px 70px gray', borderBottom: '0px' }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -65,7 +70,7 @@ const UserNavbar = () => {
               variant="h6"
               noWrap
               component="a"
-              href="#app-bar-with-responsive-menu"
+              href="/user-dashboard"
               sx={{
                 mr: 2,
                 display: { xs: 'none', md: 'flex' },
@@ -108,9 +113,9 @@ const UserNavbar = () => {
                   display: { xs: 'block', md: 'none' },
                 }}
               >
-                {pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page}</Typography>
+                {pages.map(({name, path}) => (
+                  <MenuItem key={name} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{name}</Typography>
                   </MenuItem>
                 ))}
               </Menu>
@@ -120,7 +125,7 @@ const UserNavbar = () => {
               variant="h5"
               noWrap
               component="a"
-              href="#app-bar-with-responsive-menu"
+              href="/user-dashboard"
               sx={{
                 mr: 2,
                 display: { xs: 'flex', md: 'none' },
@@ -135,13 +140,14 @@ const UserNavbar = () => {
               LOGO
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              {pages.map((page) => (
+              {pages.map(({name, path}) => (
                 <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
+                  key={name}
+                  component = {Link}
+                  to = {path}
                   sx={{ my: 2, color: 'white', display: 'block' }}
                 >
-                  {page}
+                  {name}
                 </Button>
               ))}
             </Box>
@@ -151,9 +157,12 @@ const UserNavbar = () => {
                 <LogoutIcon />
               </IconButton>
               <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Aemy Sharp" src="/static/images/avatar/2.jpg" />
-                </IconButton>
+                {/* Conditionally render Avatar button based on isAvatarVisible state */}
+                {isAvatarVisible && (
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar alt="Aemy Sharp" src="/static/images/avatar/2.jpg" />
+                  </IconButton>
+                )}
               </Tooltip>
             </Box>
           </Toolbar>

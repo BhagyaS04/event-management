@@ -4,7 +4,9 @@ import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import LikeButton from './LikeButton';
 import Popup from './Popup';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
 
 const FloatingCard = styled(Card)(({ theme }) => ({
   transition: 'transform 0.5s ease',
@@ -46,6 +48,12 @@ const Container = styled(Box)({
 });
 
 const Sec2 = () => {
+  // axios.get ('http://localhost:4000/events', { 
+  //   eventName,
+  //   eventDates,
+  //   eventDesc,
+  //   eventLikes
+  // })
   const navigate = useNavigate ()
   const onRegClick = () => {
     // navigate ('/')
@@ -75,8 +83,40 @@ const Sec2 = () => {
       const handleButtonClick = () => {
         setButtonPopup (true)
       }
-  const [buttonPopup, setButtonPopup] = useState (false)
-  const [selectedItem, setSelectedItem] = useState(null);
+      const [buttonPopup, setButtonPopup] = useState (false)
+      const [selectedItem, setSelectedItem] = useState([]);
+      const [eventNames, setEventNames] = useState ([])
+      const [allEvents, setAllEvents ] = useState ([])
+      const [eventDate, setEventDate] = useState ([])
+      const [eventDescs, setEventDescs] = useState ([])
+      const [eventLike, setEventLike] = useState ([])
+    
+      useEffect (() => {
+        const fetchEventDetails = async () => {
+          try {
+            const res = await axios.get ('http://localhost:4000/events')
+            // console.log ("response data: ", res.data)
+            if (res.data) {
+              const mappedEvents = res.data.map(event => ({
+                // id: event.id,
+                eventName: event.eventName,
+                eventDates : event.eventDates,
+                eventDesc : event.eventDesc,
+                eventLikes : event.eventLikes,
+                eventComments : event.eventComments
+              }));
+              setAllEvents(mappedEvents);
+              console.log('Entered into eventNames:', allEvents);
+            } else {
+              console.error('Unexpected response data format:', res.data);
+            }
+          } catch (error) {
+            console.error('Error fetching event names:', error);
+          }
+        };
+        fetchEventDetails();
+      }, []);
+  
    return (
     <Box sx={{ paddingBottom: 0, borderBottom: '1px solid #71797E' }}>
       <Box
@@ -88,20 +128,20 @@ const Sec2 = () => {
           paddingLeft: 20,
         }}
       >
-        <Typography variant='h5' color='white'>
-          Popular events
+        <Typography variant="h5" color="white">
+          Latest events
         </Typography>
       </Box>
       <Container>
-        {['Charlie Puth', 'Alan Walker', 'Arijit Singh', 'Shreya Ghoshal', 'Drake', 'Justin Beiber', 'Sushin Shyam'].map((item, index) => (
-          <Box onClick={() => handleCardClick(item)}>
-            <FloatingCard key={item} sx={cardStyle}>
+        {allEvents.map(event => (
+          <Box key={event.eventName} onClick={() => handleCardClick(event)}>
+            <FloatingCard sx={cardStyle}>
               <CardMedia
                 component="img"
                 height="100%"
                 width="100%"
-                image={images[index]}
-                alt={`Event ${item}`}
+                image='data:image/jpeg;base64,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'
+                alt={`Event ${event.eventName}`}
                 sx={{ objectFit: 'contain' }}
               />
               <CardContent
@@ -117,31 +157,40 @@ const Sec2 = () => {
                   color: 'white',
                 }}
               >
-              <div style = {gradientStyle}>
-                <Typography variant="h4" component="div" style={{ color: 'rgba(238, 238, 238, 0.5)'}}>
-                  {item}
-                </Typography>
-                <Typography variant = "h7" sx = {{ color : 'gray', fontSize : 'small'}}>Event {item} to be conducted this month. Performed by artist {item} at Trivandrum. Register now!</  Typography>
-                <Box sx={{ marginTop: 2 }}>
-                  <Button className="regButton" onClick={handleButtonClick}>
-                    Register+
-                  </Button>
-                </Box>
-              </div>
+                <div style={gradientStyle}>
+                  <Typography variant="h4" component="div" style={{ color: 'rgba(238, 238, 238, 0.5)' }}>
+                    {event.eventName}
+                  </Typography>
+                  <Typography variant="h7" sx={{ color: 'gray', fontSize: 'small' }}>{event.eventDesc}</Typography>
+                  <br />
+                  <Typography variant="h7" sx={{ color: 'gray', fontSize: 'small' }}>Happening on: {event.eventDates}</Typography>
+                  <Box sx={{ marginTop: 2 }}>
+                    <Button className="regButton" onClick={handleButtonClick}>
+                      Register+
+                    </Button>
+                  </Box>
+                </div>
               </CardContent>
             </FloatingCard>
           </Box>
         ))}
-        <Popup trigger = {buttonPopup} setTrigger = {setButtonPopup}>
-        {selectedItem && (
-          <Typography variant="h4" component="div" style={{ color: 'white' }}>
-            Event {selectedItem}
-          </Typography>
-        )}
-      </Popup>
+        <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
+          {selectedItem && (
+            <>
+            <Typography className='eventHeader' variant="h3" component="div" style={{ color: 'rgba(238, 238, 238, 0.5)' }}>
+              {selectedItem.eventName}
+            </Typography>
+            <Typography className='eventDate' variant = 'h6' style = {{color : 'white', textAlign : 'left'}}>
+            <br></br>Happening on: {selectedItem.eventDates}
+            </Typography>
+            <Typography variant = 'h6' style = {{color : 'white', textAlign : 'left', fontSize : 'large'}}>
+             <br></br> {selectedItem.eventDesc}
+            </Typography>
+            </>
+          )}
+        </Popup>
       </Container>
     </Box>
   );
 };
-
 export default Sec2;

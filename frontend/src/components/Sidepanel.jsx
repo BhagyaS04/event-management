@@ -33,7 +33,7 @@ const Sidepanel = () => {
   };
 
   return (
-    <div className="sidepanel"> 
+    <div className="sidepanel" > 
       <Stack spacing={2} direction="column" justifyContent="center" style={{ marginTop: '60px',paddingTop:'20px' }}>
         <Button variant="text" startIcon={<FaceIcon />} className="sidepanel-button">Edit Profile</Button>
         <Button variant="text" startIcon={<EmailIcon />} className="sidepanel-button">Send Email</Button>

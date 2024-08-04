@@ -15,6 +15,8 @@ const Layout = () => {
           backgroundImage: backgroundImage, // Apply background image
           backgroundSize: 'cover', 
           backgroundRepeat: 'no-repeat',
+          height : '98vh',
+          width : '98vw'
           // Ensure it covers the full viewport width
         }}
       >

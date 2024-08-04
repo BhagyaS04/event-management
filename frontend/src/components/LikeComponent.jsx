@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const LikeComponent = () => {
   const [isLiked, setIsLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
-
+  const [likeCount, setLikeCount] = useState(10);
+  
   const handleLike = () => {
     setIsLiked(!isLiked);
     setLikeCount(prevCount => isLiked ? prevCount - 1 : prevCount + 1);
   };
-
+  
   return (
     <div className="like-wrapper">
       <input className="check" type="checkbox" id="like-toggle" checked={isLiked} readOnly />

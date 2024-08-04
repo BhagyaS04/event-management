@@ -14,6 +14,7 @@ import UpcomingEvent from './components/UpcomingEvent'
 import UserHome from './components/UserHome';
 
 import {AnimatePresence} from 'framer-motion'
+import UserProfile from './components/UserProfile';
 
 const AnimatedRoutes = () => {
     const [count, setCount] = useState(0)
@@ -26,6 +27,7 @@ const AnimatedRoutes = () => {
       <Route path="/login" element={<Login setAuthenticated={setIsAuthenticated} />} />
         <Route path="/signup" element={<Signup />} />
         <Route path ='/user-dashboard' element = {<UserHome />} />
+        <Route path = '/user-edit-profile' element = {<UserProfile/>} />
         <Route path="/admin-dashboard" element={<MainLayout><Layout /></MainLayout>} />
         <Route path="/admin-dashboard/all-events" element={<MainLayout><AllEventsAdmin /></MainLayout>} />
         <Route path="/admin-dashboard/manage-events" element={<MainLayout><ManageEvent /></MainLayout>} />
