@@ -5,7 +5,7 @@ const eventSchema=mongoose.Schema({
     eventDates:String,
     eventDesc : String,
     eventPoster: String,
-    eventLikes : String,
+    eventLikes : Array,
     eventComments: Array,
 
 })

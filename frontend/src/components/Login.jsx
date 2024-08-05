@@ -198,6 +198,8 @@ const Login = ({ setAuthenticated }) => {
           setloginDialogMessage('Logged in successfully!');
           setOpen(true);}
 
+          sessionStorage.setItem ('userId', email)
+
           // if (email === 'admin@example.com') {
           //   setDialogType('admin');
           //   navigate('/admin-dashboard');

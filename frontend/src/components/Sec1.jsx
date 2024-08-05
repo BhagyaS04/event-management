@@ -174,7 +174,7 @@ const Sec1 = () => {
             </FloatingCard>
           </Box>
         ))}
-        <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
+        <Popup trigger={buttonPopup} setTrigger={setButtonPopup} eventId = {selectedItem._id}>
           {selectedItem && (
             <>
             <Typography className='eventHeader' variant="h3" component="div" style={{ color: 'rgba(238, 238, 238, 0.5)' }}>

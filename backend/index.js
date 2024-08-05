@@ -7,7 +7,8 @@ const app = express();
 const eventModel = require ('./model/eventData');
 const userModel = require('./model/userData');
 const eventData = require('./model/eventData');
-
+const {sendEmail} = require('./model/emailController')
+const expressAsyncHandler = require('express-async-handler');
 // const eventModel = require('./model/eventData');
 
 
@@ -183,16 +184,52 @@ app.get ('/events', async (req, res) => {
 })
 
 app.post ('/event-new', async (req, res) => {
-    try {
-        const data = req.body;
-        const newEvent = new eventModel (data);
-        const savedEvent = await newEvent.save ();
-        res.status(201).json({ newEvent, message: "Event created successfully!" });
-    } catch (error) {
-        console.log("error while creating user after valid email availability\n",error);
-        res.status(500).json({ message: "Internal server error" });
+  try {
+    const data = req.body;
+    const newEvent = new eventModel(data);
+    const savedEvent = await newEvent.save();
+    
+    const emailSubject = 'We are thrilled to announce an exciting new event: ' + newEvent.eventName;
+    const emailMessage = 'About the event: ' + newEvent.eventDesc;
+
+    // Send email to all users
+    await sendEmail({ subject: emailSubject, message: emailMessage });
+
+    res.status(201).json({ newEvent, message: "Event created successfully!" });
+} catch (error) {
+    console.log("Error while creating event or sending email:", error);
+    res.status(500).json({ message: "Internal server error" });
+}
+});
+
+app.post ('/events/:eventId', async (req, res) => {
+  const { eventId } = req.params;
+  const { userId, like } = req.body;
+
+  try {
+    const event = await eventModel.findById(eventId);
+
+    if (!event) {
+      return res.status(404).send({ message: 'Event not found' });
     }
-})
+
+    if (like) {
+      // Add userId to likes array if not already present
+      if (!event.eventLikes.includes(userId)) {
+        event.eventLikes.push(userId);
+      }
+    } else {
+      // Remove userId from likes array if present
+      event.eventLikes = event.eventLikes.filter(id => id !== userId);
+    }
+
+    await event.save();
+    res.send({ eventLikes: event.eventLikes });
+  } catch (error) {
+    console.error('Error updating event likes:', error);
+    res.status(500).send({ message: 'Error updating event likes' });
+  }
+});
 
 app.delete('/events/:id', (req, res) => {
   const eventId = req.params.id;
@@ -272,6 +309,8 @@ app.patch('/users/:id/block', async (req, res) => {
   });
 
   
+app.post('/send-email', sendEmail);
+
 app.listen(process.env.PORT, ()=>{
     console.log('Server is running on PORT',process.env.PORT);
 })

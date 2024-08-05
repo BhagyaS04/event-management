@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -16,6 +16,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 import ConfirmationDialog from './ConfirmationDialog';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const pages = [{ name: 'Dashboard', path: '/user-dashboard' }, 
   {name : 'All Events', path : '/user-dashboard'}, 
@@ -28,6 +29,25 @@ const UserNavbar = () => {
   const [open, setOpen] = useState(false);
   const [isAvatarVisible, setIsAvatarVisible] = useState(true);
   const navigate = useNavigate();
+  const [username, setUsername] = useState ('')
+
+  useEffect(() => {
+    const fetchusername = async () => {
+      try {
+        const res = await axios.get('http://localhost:4000/users');
+        if (res.data) {
+          setUsername(res.data.name);
+          console.log (res.data)
+          console.log('Fetched username:', res.data.name);
+        } else {
+          console.error('Unexpected response data format:', res.data);
+        }
+      } catch (error) {
+        console.error('Error fetching username:', error);
+      }
+    };
+    fetchusername();
+  }, []);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -58,6 +78,14 @@ const UserNavbar = () => {
   const onLogoutClick = () => {
     navigate('/');
     setOpen(false);
+  };
+
+  const getInitials = (name) => {
+    const names = name.split(' ');
+    const initials = names.length > 1
+      ? names[0][0] + names[1][0]
+      : names[0][0];
+    return initials.toUpperCase();
   };
 
   return (
@@ -160,7 +188,9 @@ const UserNavbar = () => {
                 {/* Conditionally render Avatar button based on isAvatarVisible state */}
                 {isAvatarVisible && (
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Aemy Sharp" src="/static/images/avatar/2.jpg" />
+                    <Avatar alt={username} src="/static/images/avatar/2.jpg">
+                      {username ? getInitials(username) : ''}
+                    </Avatar>
                   </IconButton>
                 )}
               </Tooltip>

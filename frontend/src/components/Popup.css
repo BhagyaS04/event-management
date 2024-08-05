@@ -125,7 +125,7 @@
     bottom : 20px;
     right : 50px;
     border-left: 1px solid #494e51;
-    height : 450px;
+    height : 600px;
     width : 250px;
   }
 
@@ -183,7 +183,7 @@
     height: 45px;
     position: fixed;
     bottom: 20px;
-    left: 40vw; 
+    left: 45vw; 
     transform: translateX(-50%); 
   }
   

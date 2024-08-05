@@ -35,21 +35,23 @@ const ManageEvent = () => {
       eventDates: eventDates,
       eventDesc: eventDesc,
       eventPoster : eventPoster
-    };
 
+    };
     axios.post('http://localhost:4000/event-new', newEvent)
-      .then(response => {
-        setAllEvents([...allEvents, response.data]);
+    .then(response => {
+        setAllEvents([...allEvents, response.data.newEvent]);
         setOpen(false);
         setEventName('');
         setEventDates('');
         setEventDesc('');
-        setEventPoster('')
-      })
-      .catch(error => {
+        setEventPoster('');
+
+        console.log('Event added and email sending triggered.');
+    })
+    .catch(error => {
         console.error("Error adding event:", error);
-      });
-  };
+    });
+};
 
   const fetchAllEvents = async () => {
     try {

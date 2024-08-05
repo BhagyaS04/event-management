@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import './Popup.css'
 import { Box, Typography } from '@mui/material';
 import './InputComponent.css'
@@ -7,10 +7,55 @@ import LikeComponent from './LikeComponent';
 import RegisterButton from './RegisterButton';
 // import { Image } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
+import axios from 'axios';
 
 
 
 const Popup = (props) => {
+
+  // const [eventName, setEventName] = useState ([])
+  // useEffect (() => {
+  //   const fetchEventName = async () => {
+  //     try {
+  //       const res = await axios.get ('http://localhost:4000/events')
+  //       // console.log ("response data: ", res.data)
+  //       if (res.data) {
+  //         const mappedEvents = res.data.map(event => ({
+  //           // id: event.id,
+  //           eventName: event.eventName,
+  //         }));
+  //         setAllEvents(mappedEvents);
+  //         console.log('Entered into eventNames:', allEvents);
+  //       } else {
+  //         console.error('Unexpected response data format:', res.data);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching event names:', error);
+  //     }
+  //   };
+  //   fetchEventName();
+  // }, []);
+  const {eventId, trigger, setTrigger, children} = props;
+  const [eventName, setEventName] = useState ('')
+  useEffect(() => {
+    const fetchEventName = async () => {
+      try {
+        const res = await axios.get(`http://localhost:4000/events/${eventId}`);
+        if (res.data) {
+          setEventName(res.data.eventName);
+          console.log('Fetched event name:', res.data.eventName);
+        } else {
+          console.error('Unexpected response data format:', res.data);
+        }
+      } catch (error) {
+        console.error('Error fetching event name:', error);
+      }
+    };
+
+    if (eventId) {
+      fetchEventName();
+    }
+  }, [eventId]);
     const handleSendClick = () => {
 
     }
@@ -36,45 +81,46 @@ const Popup = (props) => {
           },
         },
       };
-  return (props.trigger) ? (
-    <AnimatePresence>
-      {props.trigger && (
-        <div className='popup'>
-          <motion.div className="popup-inner"
-            variants={variants}
-            initial="initial"
-            animate="animate"
-            exit="exit">
-            <button className="button" onClick={() => props.setTrigger(false)}>
-              <span className="X"></span>
-              <span className="Y"></span>
-              <div className="close">Close</div>
-            </button>
-            {props.children}
-            <Box className="commentBox">
-              <div className='commentHeader'>
-                <Typography variant='h6' style={{ color: 'rgba(238, 238, 238, 0.5)' }}>Comments</Typography>
-              </div>
-              <div className="input-container">
-                <input
-                  placeholder="Comment your thoughts..."
-                  className="input"
-                  name="text"
-                  autoComplete="off"
-                  type="text"
-                />
-                <button className="send-button" onClick={handleSendClick}>
-                  <SendIcon className="send-icon" />
+      return trigger ? (
+        <AnimatePresence>
+          {trigger && (
+            <div className='popup'>
+              <motion.div
+                className="popup-inner"
+                variants={variants}
+                initial="initial"
+                animate="animate"
+                exit="exit">
+                <button className="button" onClick={() => setTrigger(false)}>
+                  <span className="X"></span>
+                  <span className="Y"></span>
+                  <div className="close">Close</div>
                 </button>
-              </div>
-            </Box>
-            <LikeComponent />
-            <RegisterButton />
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
-  ) : "";
-}
+                {children}
+                <Box className="commentBox">
+                  <div className='commentHeader'>
+                    <Typography variant='h6' style={{ color: 'rgba(238, 238, 238, 0.5)' }}>Comments</Typography>
+                  </div>
+                  <div className="input-container">
+                    <input
+                      placeholder="Comment your thoughts..."
+                      className="input"
+                      name="text"
+                      autoComplete="off"
+                      type="text"
+                    />
+                    <button className="send-button" onClick={handleSendClick}>
+                      <SendIcon className="send-icon" />
+                    </button>
+                  </div>
+                </Box>
+                <LikeComponent eventId={eventName} />
+                <RegisterButton />
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+      ) : null;
+    };
 
 export default Popup

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Checkbox,
   FormControlLabel,
@@ -33,7 +33,7 @@ import axios from 'axios';
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [passwordMismatch, setPasswordMismatch] = useState(false);
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', phoneNumber: '', confirmPassword: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', password: '', phoneNumber: '', confirmPassword: '', wantMail: false });
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
   const [termsModalOpen, setTermsModalOpen] = useState(false);
@@ -49,10 +49,19 @@ const Signup = () => {
   };
 
   const handleCheckboxChange = (event) => {
-    setWantMail ('true')
-    console.log (wantMail)
     setIsChecked(event.target.checked);
+    console.log ("isChecked:", isChecked)
+    console.log ("event of isChecked: ", event.target.checked)
   };
+
+  const handleWantMail = (event) => {
+    setWantMail (event.target.checked)
+    console.log (event.target.checked)
+    console.log (wantMail)
+  }
+  useEffect(() => {
+    console.log('Updated wantMail:', wantMail);
+  }, [wantMail]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -60,7 +69,7 @@ const Signup = () => {
   };
 
   const validateForm = () => {
-    const { password, confirmPassword, email, phoneNumber } = formData;
+    const { password, confirmPassword, email, phoneNumber, wantMail } = formData;
 
     if (!password || !confirmPassword || !email || !phoneNumber) {
       setDialogMessage('Please fill out all fields!');
@@ -139,9 +148,10 @@ const Signup = () => {
         // navigate('/login');
         return;
       }
-  
+      formData.wantMail = wantMail;
       axios.post('http://localhost:4000/user-new', formData)
         .then((res) => {
+          console.log (formData)
           setDialogMessage('Sign up successful!');
           // setRedirectToLogin(true);
           setDialogOpen(true);
@@ -400,7 +410,7 @@ const Signup = () => {
           <Typography variant = 'h6' component = 'h6' color = 'gray' style = {{ fontSize : '0.75rem'}}>Agree to the terms to sign in</Typography>
 
             <FormControlLabel
-              control={<Checkbox style = {{color : 'gray'}} />}
+              control={<Checkbox style = {{color : 'gray'}} checked = {wantMail} onChange = {handleWantMail}/>}
               label={<span style={{ fontSize: '0.75rem', color: 'gray' }}>Stay in the loop with email updates!</span>}
             />
             <Button

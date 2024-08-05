@@ -15,6 +15,7 @@ import UserHome from './components/UserHome';
 
 import {AnimatePresence} from 'framer-motion'
 import UserProfile from './components/UserProfile';
+import RegisterPage from './components/RegisterPage';
 
 const AnimatedRoutes = () => {
     const [count, setCount] = useState(0)
@@ -28,6 +29,7 @@ const AnimatedRoutes = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path ='/user-dashboard' element = {<UserHome />} />
         <Route path = '/user-edit-profile' element = {<UserProfile/>} />
+        <Route path = '/user-dashboard/register-page' element = {<RegisterPage/>}/>
         <Route path="/admin-dashboard" element={<MainLayout><Layout /></MainLayout>} />
         <Route path="/admin-dashboard/all-events" element={<MainLayout><AllEventsAdmin /></MainLayout>} />
         <Route path="/admin-dashboard/manage-events" element={<MainLayout><ManageEvent /></MainLayout>} />
