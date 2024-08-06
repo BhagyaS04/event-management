@@ -4,13 +4,26 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('https://pics.craiyon.com/2023-06-26/7f0e7d37054b4281a3769ce73625b3a6.webp'); /* Replace with your image path */
+    background-image: url('https://wallpapers.com/images/high/concert-pictures-9baas7p6pd6uq0o5.webp'); 
     background-size: cover; 
     background-position: center; 
     background-repeat: no-repeat; 
     z-index: -1; /* Ensure background is behind other elements */
   }
   
+  
+  .background-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, transparent 10%, rgba(0, 0, 0, 0.5));
+    backdrop-filter: blur(4px); /* Apply blur effect */
+    -webkit-backdrop-filter: blur(4px); /* For Safari support */
+  }
+
   .manage-event-container {
     position: relative;
     text-align: center;
@@ -76,8 +89,15 @@
   
   .event-list h3 {
     margin: 0;
+    font-family: 'Satisfy', cursive; 
+    font-size: 1.75em;
   }
   
+  .event-list-title{
+    margin: 1;
+    font-size: 2em;
+  }
+
   .event-list p {
     margin: 5px 0;
   }
@@ -85,3 +105,12 @@
     border-radius: 15px; /* Adjust this value to your preferred border radius */
   }
   
+  .title {
+    color: white;
+    padding: 25px 20px;
+    display: inline-block;
+    margin-bottom: 20px;
+    font-family: 'Great Vibes', cursive; 
+    font-size: 2.9em; 
+    overflow: hidden;
+  }

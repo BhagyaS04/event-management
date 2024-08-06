@@ -8,25 +8,25 @@ const cardData = [
     title: "Manage Events",
     content: "Add, delete or update existing event",
     path: '/admin-dashboard/manage-events',
-    image: 'https://www.adobe.com/content/dam/cc/us/en/creativecloud/photography/discover/concert-photography/thumbnail.jpeg', // Update with actual image path
+    image: 'https://wallpapers.com/images/high/concert-pictures-5z3x0i4mviwnr5lx.webp', 
   },
   {
     title: "Manage Users",
     content: "Delete or block user. Control signed in users",
     path: '/admin-dashboard/manage-users',
-    image: 'https://cc-prod.scene7.com/is/image/CCProdAuthor/concert-photography_P4a_720x480?$pjpeg$&jpegSize=200&wid=720', // Update with actual image path
+    image: 'https://wallpapers.com/images/high/concert-pictures-1500-x-1000-kiav08x9k7qtv13g.webp', 
   },
   {
     title: "View Registrations",
     content: "See who registered in which event",
     path: '/admin-dashboard/view-registrations',
-    image: 'https://cc-prod.scene7.com/is/image/CCProdAuthor/concert-photography_P4b_720x475?$pjpeg$&jpegSize=200&wid=720', // Update with actual image path
+    image: 'https://cc-prod.scene7.com/is/image/CCProdAuthor/concert-photography_P4b_720x475?$pjpeg$&jpegSize=200&wid=720', 
   },
   {
     title: "All Events",
     content: "View all events listed on the website",
     path: '/admin-dashboard/all-events',
-    image: 'https://media.istockphoto.com/id/1330424071/photo/large-group-of-people-at-a-concert-party.jpg?s=612x612&w=0&k=20&c=LwdiOCBqbfICjQ3j5AzwyugxmfkbyfL3StKEQhtx4hE=', // Update with actual image path
+    image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 
   },
 ];
 

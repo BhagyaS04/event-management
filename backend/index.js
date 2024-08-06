@@ -6,11 +6,8 @@ const cors=require('cors')
 const app = express();
 const eventModel = require ('./model/eventData');
 const userModel = require('./model/userData');
-const eventData = require('./model/eventData');
 const {sendEmail} = require('./model/emailController')
 const expressAsyncHandler = require('express-async-handler');
-// const eventModel = require('./model/eventData');
-
 
 require('./connection');
 
@@ -33,7 +30,7 @@ app.post('/users', (req, res) => {
     const { email, password } = req.body;
 
     //fetch data from database
-    const users = res.data; // assume this is an array of user objects from the database
+    const users = res.data; 
     console.log (users)
   
     const user = users.find((user) => user.email === email && user.password === password);
@@ -45,43 +42,6 @@ app.post('/users', (req, res) => {
     }
     console.log(req.data)
   });
-
-// app.post ('/users', async (req, res) => {
-//     const { email, password } = req.body;
-//     try {
-//         const user = await user.findOne({ email: email });
-//         if (user && user.password === password) {
-//           res.status(200).json({ message: 'Login successful' });//, role: user.email === 'admin' ? 'admin' : 'user'
-
-//         } else {
-//           res.status(401).json({ message: 'Invalid credentials' });
-//         }
-//       } catch (error) {
-//         res.status(500).json({ message: 'Internal server error' });
-//       }
-//     });
-
-// app.post('/user-new', async (req, res) => {
-//     try{
-//         // console.log(req.body)
-//         const {email} = req.body;
-//         const userExists = await userModel.findOne({email});
-//         console.log ("printing val of userExists var:\n",userExists)
-//         if(userExists){
-//             console.log("Email already under use!");
-//             return res.status(400).json({message:"Email already under use!"});
-            
-//         } else {
-//             const data = req.body;
-//             const newUser = new userModel(data);
-//             const savedUser = await newUser.save();
-//             res.status(201).json({message: "User created successfully!"});
-//             // console.log({savedUser});
-//         }
-//     }catch(error){
-//         console.log(error)
-//     }
-// })
 
 app.post('/check-email', async (req, res) => {
     try {
@@ -128,53 +88,10 @@ app.post('/user-new', async (req, res) => {
     }
 });
 
-
-// //making changes to add new events 
-// app.get('/events', async(req, res)=>{
-//     console.log('inside events')
-//     try{
-//         const data = await eventModel.find();
-//         console.log(data);
-//         res.send(data);
-//     }
-//     catch(error){
-//         console.log("error")
-//     }
-// })
-
-// app.post('/event-new', async (req, res) => {
-//     try {
-//         // console.log(req.body) 
-//         const { eventName } = req.body;
-//         const eventExists = await eventModel.findOne({ eventName });
-//         // console.log("printing val of eventExists var:\n", eventExists);
-
-//         // if (userExists) {
-//         //     console.log("Email already under use!");
-//         //     return res.status(400).json({ message: "Email already under use!" });
-//         // } else {
-//             const data = req.body;
-//             const newEvent = new eventModel(data);
-//             const savedEvent = await newEvent.save();
-//             res.status(201).json({ message: "Event created successfully!" });
-//             console.log({ savedEvent });
-//         // }
-//     } catch (error) {
-//         if (error.code === 11000) {
-//             // Handle duplicate key error
-//             const duplicateField = Object.keys(error.keyValue)[0];
-//             res.status(400).json({ message: ${duplicateField} already in use });
-//         }
-
-//         else {
-//         res.status(500).json({ message: "Internal server error" });
-//         }
-//     }
-// });
-
 app.get ('/events', async (req, res) => {
     try {
-        const event = await eventModel.find({},'eventName eventDates eventDesc eventLikes eventComments');
+        // const event = await eventModel.find({},'eventName eventDates eventDesc  eventPoster eventLikes eventComments');        
+        const event = await eventModel.find();
         console.log (event);
         res.send (event)
     } catch (error) {
@@ -203,6 +120,8 @@ app.post ('/event-new', async (req, res) => {
 });
 
 app.get('/events/:eventId', async (req, res) => {
+// handling likes under an event
+app.post ('/events/:eventId', async (req, res) => {
   const { eventId } = req.params;
 
   try {
@@ -252,6 +171,7 @@ app.put ('/events/:eventName', async (req, res) => {
   }
 });
 
+// deleting an event
 app.delete('/events/:id', (req, res) => {
   const eventId = req.params.id;
   eventModel.findByIdAndDelete(eventId)
@@ -283,7 +203,7 @@ app.put('/events/:id', async (req, res) => {
   }
 });
 
-//delete a user
+//deleting a user
 app.delete('/users/:id', async (req, res) => {
     try {
       await userModel.findByIdAndDelete(req.params.id);
@@ -293,13 +213,14 @@ app.delete('/users/:id', async (req, res) => {
       res.status(500).send('Server error');
     }
   });
-  // Block a user
+
+// Blocking a user
 app.patch('/users/:id/block', async (req, res) => {
     try {
       const user = await userModel.findByIdAndUpdate(
         req.params.id,
         { $set: { blocked: true } },
-        { new: true } // Return the updated document
+        { new: true } // Return updated document
       );
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
@@ -329,8 +250,52 @@ app.patch('/users/:id/block', async (req, res) => {
     }
   });
 
-  
+//sending email
 app.post('/send-email', sendEmail);
+
+// Fetch security question by email
+app.post('/security-question', async (req, res) => {
+  const { email } = req.body;
+  
+  try {
+      const user = await userModel.findOne({ email });
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+      
+      // Return the security question
+      // res.json({ securityQuestion: user.securityQuestion });
+      console.log('securityQuestion: ', user.securityQuestion)
+
+  } catch (error) {
+      console.error('Error fetching security question:', error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// Verify security answer
+app.post('/verify-security-answer', async (req, res) => {
+  const { email, answer } = req.body;
+
+  try {
+      const user = await userModel.findOne({ email });
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      // Check if the answer matches
+      if (user.securityAnswer === answer) {
+          // return res.json({ success: true, message: 'Answer is correct' });
+          console.log('sec answer is correct')
+      } else {
+          // return res.json({ success: false, message: 'Answer is incorrect' });
+          console.log('sec answer incorrect!')
+      }
+  } catch (error) {
+      console.error('Error verifying security answer:', error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 app.listen(process.env.PORT, ()=>{
     console.log('Server is running on PORT',process.env.PORT);
