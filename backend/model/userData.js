@@ -7,7 +7,9 @@ const userSchema = new mongoose.Schema({
   phoneNumber : String,
   password : String,
   blocked : { type: Boolean, default: false },
-  wantMail : { type: Boolean, default: false }
+  wantMail : { type: Boolean, default: false },
+  securityQuestion: {type: String, default: "What is your pet's name?"}, 
+  securityAnswer: String
 
 });
 
