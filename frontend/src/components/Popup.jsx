@@ -38,22 +38,14 @@ const Popup = (props) => {
   const {eventId, trigger, setTrigger, children} = props;
   const [eventName, setEventName] = useState ('')
   useEffect(() => {
-    const fetchEventName = async () => {
-      try {
-        const res = await axios.get(`http://localhost:4000/events/${eventId}`);
-        if (res.data) {
-          setEventName(res.data.eventName);
-          console.log('Fetched event name:', res.data.eventName);
-        } else {
-          console.error('Unexpected response data format:', res.data);
-        }
-      } catch (error) {
-        console.error('Error fetching event name:', error);
-      }
-    };
-
+    if (trigger) {
+      console.log('Popup opened for event ID:', eventId);
+    }
+  }, [trigger, eventId]);
+  useEffect(() => {
     if (eventId) {
-      fetchEventName();
+      setEventName(eventId);
+      console.log('Using eventId directly:', eventId);
     }
   }, [eventId]);
     const handleSendClick = () => {
@@ -114,7 +106,7 @@ const Popup = (props) => {
                     </button>
                   </div>
                 </Box>
-                <LikeComponent eventId={eventName} />
+                <LikeComponent eventId={eventId} isOpen={trigger} />
                 <RegisterButton />
               </motion.div>
             </div>

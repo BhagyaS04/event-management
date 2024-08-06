@@ -202,12 +202,33 @@ app.post ('/event-new', async (req, res) => {
 }
 });
 
-app.post ('/events/:eventId', async (req, res) => {
+app.get('/events/:eventId', async (req, res) => {
   const { eventId } = req.params;
-  const { userId, like } = req.body;
 
   try {
     const event = await eventModel.findById(eventId);
+
+    if (!event) {
+      return res.status(404).send({ message: 'Event not found' });
+    }
+
+    res.send({
+      eventName: event.eventName, // Assuming your event model has an eventName field
+      eventLikes: event.eventLikes,
+    });
+  } catch (error) {
+    console.error('Error fetching event details:', error);
+    res.status(500).send({ message: 'Error fetching event details' });
+  }
+});
+
+
+app.put ('/events/:eventName', async (req, res) => {
+  const { eventName } = req.params;
+  const { userId, like } = req.body;
+
+  try {
+    const event = await eventModel.findById(eventName);
 
     if (!event) {
       return res.status(404).send({ message: 'Event not found' });

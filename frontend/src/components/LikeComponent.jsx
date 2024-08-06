@@ -2,22 +2,24 @@ import React, { useState, useEffect } from 'react';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import axios from 'axios';
-const LikeComponent = ({eventId}) => {
+const LikeComponent = ({eventId, isOpen}) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
-  const [eventLikes, setEventLikes] = useState ([]);
-  const userId = sessionStorage.getItem ('userId')
+  const [eventLikes, setEventLikes] = useState([]);
+  const userId = sessionStorage.getItem('userId');
 
   const handleLike = async () => {
     if (!userId) {
-      console.error ("User ID not found in session storage")
+      console.error("User ID not found in session storage");
       return;
     }
+    console.log("User ID:", userId);
+    console.log("Event ID:", eventId);
     try {
       // Toggle like status and update like count
       const newIsLiked = !isLiked;
-      const res = await axios.post(`http://localhost:4000/events/${eventId}`, {
-        userId : userId,
+      const res = await axios.put(`http://localhost:4000/events/${eventId}`, {
+        userId: userId,
         like: newIsLiked,
       });
 
@@ -25,6 +27,7 @@ const LikeComponent = ({eventId}) => {
         // Update state based on response
         const updatedLikesArray = res.data.eventLikes;
         setEventLikes(updatedLikesArray);
+        console.log ("Updated likes array: ", updatedLikesArray)
         setLikeCount(updatedLikesArray.length);
         setIsLiked(newIsLiked);
       } else {
@@ -43,7 +46,9 @@ const LikeComponent = ({eventId}) => {
           const eventLikesArray = res.data.eventLikes || []; // Default to empty array if undefined
           setEventLikes(eventLikesArray);
           setLikeCount(eventLikesArray.length);
+          setIsLiked(eventLikesArray.includes(userId));
           console.log("EventName in like component:", eventId);
+          console.log("eventlikesaray: ",eventLikesArray)
         } else {
           console.error('Unexpected response data format:', res.data);
         }
@@ -52,10 +57,18 @@ const LikeComponent = ({eventId}) => {
       }
     };
 
-    if (eventId) {
+    if (isOpen && eventId) {
       fetchLikes();
     }
-  }, [eventId]);
+
+
+    // Reset states when eventId changes
+    return () => {
+      setIsLiked(false);
+      setLikeCount(0);
+      setEventLikes([]);
+    };
+  }, [eventId, userId]);
 
 
   return (

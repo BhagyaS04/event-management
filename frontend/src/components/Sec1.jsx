@@ -98,7 +98,7 @@ const Sec1 = () => {
             // console.log ("response data: ", res.data)
             if (res.data) {
               const mappedEvents = res.data.map(event => ({
-                // id: event.id,
+                id: event._id,
                 eventName: event.eventName,
                 eventDates : event.eventDates,
                 eventDesc : event.eventDesc,
@@ -106,7 +106,7 @@ const Sec1 = () => {
                 eventComments : event.eventComments
               }));
               setAllEvents(mappedEvents);
-              console.log('Entered into eventNames:', allEvents);
+              console.log('Entered into eventNames:', mappedEvents);
             } else {
               console.error('Unexpected response data format:', res.data);
             }
@@ -174,7 +174,7 @@ const Sec1 = () => {
             </FloatingCard>
           </Box>
         ))}
-        <Popup trigger={buttonPopup} setTrigger={setButtonPopup} eventId = {selectedItem._id}>
+        <Popup trigger={buttonPopup} setTrigger={setButtonPopup} eventId = {selectedItem.id}>
           {selectedItem && (
             <>
             <Typography className='eventHeader' variant="h3" component="div" style={{ color: 'rgba(238, 238, 238, 0.5)' }}>
