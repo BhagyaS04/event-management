@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import ConfirmationDialog from './ConfirmationDialog';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Diversity2RoundedIcon from '@mui/icons-material/Diversity2Rounded';
 
 const pages = [{ name: 'Dashboard', path: '/user-dashboard' }, 
   {name : 'All Events', path : '/user-dashboard'}, 
@@ -94,18 +95,23 @@ const UserNavbar = () => {
       <AppBar position="static" className='userAppbar' sx={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(5px)', width: '100vw', boxShadow: '5px 5px 70px gray', borderBottom: '0px' }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <Diversity2RoundedIcon fontSize="large" sx={{ mr: 1 }} />
             <Typography
               variant="h6"
               noWrap
               component="a"
               href="/user-dashboard"
               sx={{
+                fontFamily:"Pacifico",
+                fontStyle:"cursive",
+                fontSize:"2em",
                 mr: 2,
                 display: { xs: 'none', md: 'flex' },
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                letterSpacing: '.3rem',
+
+                // fontFamily: 'monospace',
+                // fontWeight: 700,
+                // letterSpacing: '.3rem',
+
                 color: 'inherit',
                 textDecoration: 'none',
               }}

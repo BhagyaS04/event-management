@@ -18,6 +18,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ConfirmationDialog from './ConfirmationDialog';
 import './NavbarAdmin.css';
+import Diversity2RoundedIcon from '@mui/icons-material/Diversity2Rounded';
 
 const pages = [
   { name: 'Dashboard', path: '/admin-dashboard' },
@@ -85,15 +86,16 @@ const NavbarAdmin = () => {
       <AppBar position="absolute" sx={{ backgroundColor: '#242424', height : 70 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 8 }} />
+          <Diversity2RoundedIcon fontSize="large" sx={{ mr: 1 }} />
             <Typography
               variant="h5"
               noWrap
               component={Link}
               to="/admin-dashboard"
               className="navbar-title"
+              sx={{fontFamily: "Pacifico", fontStyle: "cursive", fontSize:"2em" }}
             >
-              Event Manager
+              Olam
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
