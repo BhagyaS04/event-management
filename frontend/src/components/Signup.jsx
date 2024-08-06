@@ -15,37 +15,49 @@ import {
   DialogContentText,
   DialogTitle,
   Link,
-  Typography
+  Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel
+
 } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import EmailIcon from '@mui/icons-material/Email';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import LockIcon from '@mui/icons-material/Lock';
+import PhoneIcon from '@mui/icons-material/Phone';
 import { useNavigate } from 'react-router-dom';
 import {motion} from 'framer-motion'
 import './Signup.css';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 import axios from 'axios';
 
 
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
+    const [showSecurityAnswer, setShowSecurityAnswer] = useState(false);
   const [passwordMismatch, setPasswordMismatch] = useState(false);
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', phoneNumber: '', confirmPassword: '', wantMail: false });
+  const [formData, setFormData] = useState({ name: '', email: '', password: '', phoneNumber: '', confirmPassword: '', wantMail: false , securityQuestion: '', securityAnswer: ''});
+  //, securityQuestion: '', securityAnswer: ''
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
   const [termsModalOpen, setTermsModalOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const navigate = useNavigate();
   const [wantMail, setWantMail] = useState (false);
-  // const [redirectToLogin, setRedirectToLogin] = useState(false);
   const [emailExistsDialogOpen, setEmailExistsDialogOpen] = useState(false); // New state for email exists dialog
 
 
   const handleClickShowPassword = () => {
     setShowPassword(prev => !prev);
+  };
+
+  const handleClickShowSecurityAnswer = () => {
+    setShowSecurityAnswer(prev => !prev);
   };
 
   const handleCheckboxChange = (event) => {
@@ -58,10 +70,16 @@ const Signup = () => {
     setWantMail (event.target.checked)
     console.log (event.target.checked)
     console.log (wantMail)
-  }
+    // setFormData((prevFormData) => ({ ...prevFormData, wantMail: event.target.checked }));
+  };
+
   useEffect(() => {
     console.log('Updated wantMail:', wantMail);
   }, [wantMail]);
+
+  // useEffect(() => {
+  //   console.log('Updated wantMail:', formData.wantMail);
+  // }, [formData.wantMail]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -69,9 +87,10 @@ const Signup = () => {
   };
 
   const validateForm = () => {
-    const { password, confirmPassword, email, phoneNumber, wantMail } = formData;
+    const { password, confirmPassword, email, phoneNumber, wantMail , securityQuestion, securityAnswer} = formData; //, securityQuestion, securityAnswer
 
-    if (!password || !confirmPassword || !email || !phoneNumber) {
+    if (!password || !confirmPassword || !email || !phoneNumber|| !securityQuestion || !securityAnswer) { //|| !securityQuestion || !securityAnswer
+
       setDialogMessage('Please fill out all fields!');
       setDialogOpen(true);
       return false;
@@ -113,39 +132,13 @@ const Signup = () => {
       return false;
     }
   };
-  // const handleSubmit = () => {
-    
-  //   if( validateForm ) {
-  //     axios.post('http://localhost:4000/user-new', formData)
-  //     .then((res) => {
-  //       setDialogMessage('Sign up successful!');
-  //       setDialogOpen(true);
-      
-  //     }).catch((error) => {
-  //       // setDialogMessage('Error occured!');
-  //       // setDialogOpen (true)
-  //       const errorMessage = error.response?.data?.message || error.message;
-  //       if (errorMessage === "Email already under use!") {
-  //         setDialogMessage('Email already under use! Please login..');
-  //         // navigate('/login')
-  //       } else {
-  //         setDialogMessage(`Error occurred: ${errorMessage}`);
-  //       }
-  //       setDialogOpen(true);
-  //     })
-  //   } //if validateform close
-  // };
-
+ 
   const handleSubmit = async () => {
     if (validateForm()) {
       const isEmailAvailable = await checkEmailAvailability(formData.email);
   
       if (!isEmailAvailable) {
-        // setDialogMessage('Email already under use!');
-        // setDialogOpen(true);
         setEmailExistsDialogOpen(true); // Open the email exists dialog
-        // Uncomment the following line to navigate to the login page
-        // navigate('/login');
         return;
       }
       formData.wantMail = wantMail;
@@ -153,13 +146,11 @@ const Signup = () => {
         .then((res) => {
           console.log (formData)
           setDialogMessage('Sign up successful!');
-          // setRedirectToLogin(true);
           setDialogOpen(true);
         })
         .catch((error) => {
           const errorMessage = error.response?.data?.message || error.message;
           setDialogMessage(`Error occurred: ${errorMessage}`);
-          // setRedirectToLogin(false);
           setDialogOpen(true);
         });
     }
@@ -173,15 +164,6 @@ const Signup = () => {
     }
   };
   
-  // const handleDialogClose = () => {
-  //   setDialogOpen(false);
-  // };
-
-  // const handleOkClick = () => {
-  //   setDialogOpen(false);
-  //   navigate('/login');
-  // };
-
   const handleEmailExistsDialogClose = () => {
     setEmailExistsDialogOpen(false);
   };
@@ -322,7 +304,7 @@ const Signup = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <EmailIcon sx={{ color: 'gray' }} />
+                    <PhoneIcon sx={{ color: 'gray' }} />
                   </InputAdornment>
                 ),
                 style: { color: 'gray' }
@@ -351,7 +333,7 @@ const Signup = () => {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton onClick={handleClickShowPassword} edge="end">
-                      {showPassword ? <VisibilityOffIcon sx={{ color: 'gray' }} /> : <VisibilityIcon sx={{ color: 'gray' }} />}
+                      {showPassword ? <VisibilityIcon sx={{ color: 'gray' }} /> : <VisibilityOffIcon sx={{ color: 'gray' }} />}
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -381,7 +363,7 @@ const Signup = () => {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton onClick={handleClickShowPassword} edge="end">
-                      {showPassword ? <VisibilityOffIcon sx={{ color: 'gray' }} /> : <VisibilityIcon sx={{ color: 'gray' }} />}
+                      {showPassword ? <VisibilityIcon sx={{ color: 'gray' }} /> : <VisibilityOffIcon sx={{ color: 'gray' }} />}
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -396,6 +378,68 @@ const Signup = () => {
               }}
               variant="standard"
             />
+             <FormControl variant="standard" sx={{ width: 250 }}>
+              <InputLabel style={{ color: 'gray' }}>Security Question</InputLabel>
+              <Select
+                name="securityQuestion"
+                value={formData.securityQuestion}
+                onChange={handleInputChange}
+                label="Security Question"
+                sx={{
+                  '& .MuiInput-underline:before': { borderBottomColor: 'black' },
+                  '& .MuiInput-underline:hover:before': { borderBottomColor: 'teal' },
+                  '& .MuiInput-underline:after': { borderBottomColor: 'gray' },
+                  color: 'gray'
+                }}
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      bgcolor: '#212121',
+                      '& .MuiMenuItem-root': {
+                        color: 'white',
+                      }
+                    }
+                  }
+                }}
+              >
+                <MenuItem value="What was your first pet's name?">What was your first pet's name?</MenuItem>
+                <MenuItem value="What is your car number?">What is your car number?</MenuItem>
+                <MenuItem value="What was the name of your first school?">What was the name of your first school?</MenuItem>
+                <MenuItem value="What was your favorite food as a child?">What was your favorite food as a child?</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              label="Security Answer"
+              name="securityAnswer"
+              type={showSecurityAnswer ? 'text' : 'password'}
+              value={formData.securityAnswer}
+              onChange={handleInputChange}
+              InputProps={{
+                // startAdornment: (
+                //   <InputAdornment position="start">
+                //     <LockIcon sx={{ color: 'gray' }} />
+                //   </InputAdornment>
+                // ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={handleClickShowSecurityAnswer} edge="end">
+                      {showSecurityAnswer ? <VisibilityIcon sx={{ color: 'gray' }} /> : <VisibilityOffIcon sx={{ color: 'gray' }} />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+
+                style: { color: 'grey' }
+              }}
+              InputLabelProps={{ style: { color: 'gray' } }}
+              sx={{
+                width: 250,
+                '& .MuiInput-underline:before': { borderBottomColor: 'black' },
+                '& .MuiInput-underline:hover:before': { borderBottomColor: 'teal' },
+                '& .MuiInput-underline:after': { borderBottomColor: 'gray' }
+              }}
+              variant="standard"
+            />
+
             <FormControlLabel
               control={<Checkbox checked={isChecked} onChange={handleCheckboxChange} style = {{color : 'gray'}}/>}
               label={
@@ -407,7 +451,7 @@ const Signup = () => {
                 </span>
               }
             />
-          <Typography variant = 'h6' component = 'h6' color = 'gray' style = {{ fontSize : '0.75rem'}}>Agree to the terms to sign in</Typography>
+          {/* <Typography variant = 'h6' component = 'h6' color = 'gray' style = {{ fontSize : '0.75rem'}}>Agree to the terms to sign in</Typography> */}
 
             <FormControlLabel
               control={<Checkbox style = {{color : 'gray'}} checked = {wantMail} onChange = {handleWantMail}/>}
@@ -417,15 +461,26 @@ const Signup = () => {
               variant="contained"
               color="primary"
               onClick={handleSubmit}
+               sx={{
+                width: 250,
+                alignSelf: 'center',
+                backgroundColor: 'teal',
+                color: 'white',
+                '&:hover': {
+                  backgroundColor: '#007474',
+                }
+              }}
               disabled={!isChecked}
             >
               Sign up
             </Button>
+
             <Box sx={{ mt: 2, textAlign: 'center' }}>
               <Link href="/login" color="primary" underline="hover">
                 Already a member? Login here
               </Link>
             </Box>
+            
           </Stack>
         </Box>
         <Dialog open={dialogOpen} onClose={handleDialogClose}>
@@ -468,22 +523,6 @@ const Signup = () => {
             <Button onClick={handleEmailExistsDialogLogin}>OK</Button>
           </DialogActions>
         </Dialog>
-        {/* <Dialog open={dialogOpen} onClose={handleDialogClose}>
-        <DialogTitle>{dialogMessage === 'Email already under use! Click ok to Login' ? 'Continue to Login?' : 'Error'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>{dialogMessage}</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDialogClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleOkClick} color="primary">
-            OK
-          </Button>
-        </DialogActions>
-      </Dialog> */}
-
-
       </Box>
     </motion.div>
   );

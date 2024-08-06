@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, IconButton } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, IconButton, Backdrop, CircularProgress } from '@mui/material';
 import './ManageEvent.css';
 import axios from 'axios';
 import EditIcon from '@mui/icons-material/Edit';
@@ -10,12 +10,17 @@ const ManageEvent = () => {
   const [eventName, setEventName] = useState('');
   const [eventDates, setEventDates] = useState('');
   const [eventDesc, setEventDesc] = useState('');
-  const [eventPoster, setEventPoster] = useState ('')
+  const [eventPoster, setEventPoster] = useState('');
   const [allEvents, setAllEvents] = useState([]);
   const [editEventId, setEditEventId] = useState(null);
   const [editOpen, setEditOpen] = useState(false);
-  const [selectedEventId, setSelectedEventId] = useState (null)
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState (false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
+  const [selectedEventId, setSelectedEventId] = useState(null);
+  const [backdropOpen, setBackdropOpen] = useState(false); 
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -29,29 +34,43 @@ const ManageEvent = () => {
     setEditOpen(false);
   };
 
+  const showAlert = (title, message) => {
+    setAlertTitle(title);
+    setAlertMessage(message);
+    setAlertOpen(true);
+  };
+
   const handleAddEvent = () => {
     const newEvent = {
-      eventName: eventName,
-      eventDates: eventDates,
-      eventDesc: eventDesc,
-      eventPoster : eventPoster
-
+      eventName,
+      eventDates,
+      eventDesc,
+      eventPoster,
     };
+
+    handleClose(); // Close the dialog
+    setBackdropOpen(true); // Show backdrop
+
     axios.post('http://localhost:4000/event-new', newEvent)
-    .then(response => {
-        setAllEvents([...allEvents, response.data.newEvent]);
-        setOpen(false);
+      .then(response => {
+        fetchAllEvents();
+
         setEventName('');
         setEventDates('');
         setEventDesc('');
         setEventPoster('');
 
+        showAlert("Success", "Event has been successfully added."); 
         console.log('Event added and email sending triggered.');
-    })
-    .catch(error => {
+      })
+      .catch(error => {
         console.error("Error adding event:", error);
-    });
-};
+        showAlert("Error", "Error adding event. Please try again."); 
+      })
+      .finally(() => {
+        setBackdropOpen(false); // Hide backdrop after request is complete
+      });
+  };
 
   const fetchAllEvents = async () => {
     try {
@@ -70,36 +89,48 @@ const ManageEvent = () => {
     fetchAllEvents();
   }, []);
 
-  const handleDeleteEvent = (eventId) => {
-    axios.delete(`http://localhost:4000/events/${eventId}`)
+  const handleDeleteEvent = () => {
+    axios.delete(`http://localhost:4000/events/${selectedEventId}`)
       .then(() => {
-        setAllEvents(allEvents.filter(event => event._id !== eventId));
+        setAllEvents(allEvents.filter(event => event._id !== selectedEventId));
+        setDeleteDialogOpen(false);
       })
       .catch(error => {
         console.error("Error deleting event:", error);
       });
   };
-  const DeleteDialog = (eventId) => {
-    setSelectedEventId (eventId)
-    setDeleteDialogOpen (true)
-  }
+
+  const openDeleteDialog = (eventId) => {
+    setSelectedEventId(eventId);
+    setDeleteDialogOpen(true);
+  };
+
   const handleEditEvent = () => {
     const updatedEvent = {
       eventName,
       eventDates,
       eventDesc,
+      eventPoster,
     };
 
-    axios.put(`http://localhost:4000/events/${editEventId}`, updatedEvent)
+    setUpdateDialogOpen(true);
+  };
+
+  const confirmUpdateEvent = () => {
+    axios.put(`http://localhost:4000/events/${editEventId}`, {
+      eventName,
+      eventDates,
+      eventDesc,
+      eventPoster,
+    })
       .then(response => {
-        const updatedEvents = allEvents.map(event =>
-          event._id === editEventId ? response.data : event
-        );
-        setAllEvents(updatedEvents);
+        fetchAllEvents();
         setEditOpen(false);
+        setUpdateDialogOpen(false);
         setEventName('');
         setEventDates('');
         setEventDesc('');
+        setEventPoster('');
       })
       .catch(error => {
         console.error("Error updating event:", error);
@@ -111,17 +142,20 @@ const ManageEvent = () => {
     setEventName(event.eventName);
     setEventDates(event.eventDates);
     setEventDesc(event.eventDesc);
+    setEventPoster(event.eventPoster);
     setEditOpen(true);
   };
 
   return (
     <div className="manage-event-container">
-      <div className="background-image" /> {/* Add background image */}
-      <div className="content"> {/* Wrap content in a div for styling */}
-        <h1>Manage Events</h1>
+      <div className="background-image" />
+      <div className="content">
+        <h1 className="title">Manage Events</h1>
         <div className="manage-event-buttons">
           <button className="manage-event-button" onClick={handleClickOpen}>Add Event +</button>
         </div>
+
+        {/* Add Event Dialog */}
         <Dialog open={open} onClose={handleClose} className="custom-dialog">
           <DialogTitle className="dialog-title">Add Event</DialogTitle>
           <DialogContent className="dialog-content">
@@ -161,7 +195,7 @@ const ManageEvent = () => {
             <TextField
               autoFocus
               margin="dense"
-              label="Event poster"
+              label="Event Poster"
               type="text"
               fullWidth
               className="text-field"
@@ -174,6 +208,8 @@ const ManageEvent = () => {
             <Button onClick={handleAddEvent}>Add</Button>
           </DialogActions>
         </Dialog>
+
+        {/* Edit Event Dialog */}
         <Dialog open={editOpen} onClose={handleEditClose} className="custom-dialog">
           <DialogTitle className="dialog-title">Edit Event</DialogTitle>
           <DialogContent className="dialog-content">
@@ -213,7 +249,7 @@ const ManageEvent = () => {
             <TextField
               autoFocus
               margin="dense"
-              label="Event poster"
+              label="Event Poster"
               type="text"
               fullWidth
               className="text-field"
@@ -226,8 +262,34 @@ const ManageEvent = () => {
             <Button onClick={handleEditEvent}>Edit</Button>
           </DialogActions>
         </Dialog>
+
+        {/* Delete Confirmation Dialog */}
+        <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent>
+            <p>Are you sure you want to delete this event? This action cannot be undone.</p>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleDeleteEvent}>Delete</Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Update Confirmation Dialog */}
+        <Dialog open={updateDialogOpen} onClose={() => setUpdateDialogOpen(false)}>
+          <DialogTitle>Confirm Update</DialogTitle>
+          <DialogContent>
+            <p>Are you sure you want to update this event?</p>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setUpdateDialogOpen(false)}>Cancel</Button>
+            <Button onClick={confirmUpdateEvent}>Update</Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Event List */}
         <div className="event-list">
-          <h2>Event List</h2>
+          <h2 className="event-list-title">Event List</h2>
           {allEvents.length === 0 ? (
             <p>No events added yet.</p>
           ) : (
@@ -247,7 +309,7 @@ const ManageEvent = () => {
                     <IconButton onClick={() => handleOpenEditDialog(event)}>
                       <EditIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleDeleteEvent(event._id)}>
+                    <IconButton onClick={() => openDeleteDialog(event._id)}>
                       <DeleteIcon />
                     </IconButton>
                   </div>
@@ -256,6 +318,22 @@ const ManageEvent = () => {
             </div>
           )}
         </div>
+
+        {/* Backdrop for loading */}
+        <Backdrop open={backdropOpen} style={{ zIndex: 1000 }}>
+          <CircularProgress size={70} sx={{ color: 'teal' }} />
+        </Backdrop>
+
+        {/* Custom Alert Dialog */}
+        <Dialog open={alertOpen} onClose={() => setAlertOpen(false)}>
+          <DialogTitle>{alertTitle}</DialogTitle>
+          <DialogContent>
+            <p>{alertMessage}</p>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setAlertOpen(false)}>OK</Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </div>
   );
