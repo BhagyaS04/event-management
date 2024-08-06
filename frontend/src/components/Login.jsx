@@ -20,6 +20,151 @@ const Login = ({ setAuthenticated }) => {
   const [dialogType, setDialogType] = useState('');
   const [id, setId] = useState ('')
 
+// const checkDB = () => {
+
+// }
+
+  // const handleLogin = () => {
+  //   if (username === 'admin' && password === 'password') {
+  //     setAuthenticated(true);
+  //     navigate('/admin-dashboard');
+  //   } else if (username === 'user' && password === 'password') {
+  //     setAuthenticated(true);
+  //     navigate('/user-dashboard');
+  //   } else {
+  //     setOpen(true);
+  //   }
+  // };
+
+  // const handleLogin = () => {
+  //   axios.get('http://localhost:4000/users', {
+  //     email,
+  //     password
+  //   })
+  //   .then((res) => {
+  //     if (res.data && email != 'admin') {
+
+  //       console.log("\ninside handleLogin fn in login.jsx\nprinting res.data.user\n")
+
+  //       console.log(res.data.user); // assuming the server returns the user object
+
+  //       //add login validation using db
+  //       setloginDialogMessage('Logged in successfully!');
+  //       setOpen(true);
+  //       navigate('/user-dashboard');
+
+
+  //     } else if (email === 'admin'){
+  //       setloginDialogMessage('Admin logged in successfully!');
+  //       setOpen(true);
+  //       navigate('/admin-dashboard');
+  //     } 
+  //     else {
+  //       setloginDialogMessage('Invalid email or password!');
+  //       setOpen(true);
+  //     }
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //     setloginDialogMessage('Error occurred!');
+  //     setOpen(true);
+  //   });
+  // };
+
+  // const handleLogin = () => {
+  //   axios.get('http://localhost:4000/users', {
+  //     params: { email }
+  //   })
+  //   .then((res) => {
+  //     console.log("printing value of res: ", res)
+  //     const user = res.data.user;
+  //     console.log("printing val of res.data.user:\n")
+  //     if (user) {
+  //       // Email exists, now check password
+  //       if (user.password === password) {
+  //         setloginDialogMessage('Logged in successfully!');
+  //         setOpen(true);
+  //         if (email === 'admin') {
+  //           navigate('/admin-dashboard');
+  //         } else {
+  //           navigate('/user-dashboard');
+  //         }
+  //       } else {
+  //         setloginDialogMessage('Invalid password!');
+  //         setOpen(true);
+  //       }
+  //     } else {
+  //       setloginDialogMessage('Email does not exist!');
+  //       setOpen(true);
+  //     }
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //     setloginDialogMessage('Error occurred!');
+  //     setOpen(true);
+  //   });
+  // };
+  
+  // const handleLogin = () => {
+  //   console.log(`Attempting to login with email: ${email}`);
+  //   axios.get('http://localhost:4000/users', {
+  //     params: { email }
+  //   })
+  //   .then((res) => {
+  //     // const user = res.data.user;
+  //    const users = res.data;
+     
+
+  //     // console.log("printing value of res.data : ", res.data)
+  //     console.log('Response from server (res.data value):', res.data);
+
+  //     const user = users.find(user => user.email === email);
+  //     // const adminEmailPattern = /admin.@.\.(com|in)$/i;
+
+      
+  //     //to avoid users whose name has 'admin' in it to login to admin portal
+  //     const adminEmailPattern = /^admin\..+@.+\.(com|in)$/i; //better version of admin mail pattern 
+
+
+  //     if (user) {
+  //       console.log('User found:', user);
+  //       // Email exists, now check password
+  //       if (user.password === password ) {
+  //         setloginDialogMessage('Logged in successfully!');
+  //         setOpen(true);
+
+  //         // if (email === 'admin@example.com') {
+  //         //   setDialogType('admin');
+  //         //   navigate('/admin-dashboard');
+  //         // } 
+  //         if (adminEmailPattern.test(email)){
+  //           setloginDialogMessage('Admin logged in successfully!');
+  //           setDialogType('admin');
+  //           navigate('/admin-dashboard');
+  //         }
+  //         else {
+  //           setDialogType('user');
+  //           navigate('/user-dashboard');
+  //         }
+  //       } else {
+  //         setloginDialogMessage('Invalid password!');
+  //         setDialogType('error');
+  //         setOpen(true);
+  //       }
+  //     } else {
+  //       setloginDialogMessage('Email does not exist!');
+  //       setDialogType('error');
+  //       setOpen(true);
+  //     }
+  //   })
+  //   .catch((error) => {
+  //     console.error('Error during login request:', error);
+  //     setloginDialogMessage('Error occurred!');
+  //     setDialogType('error');
+  //     setOpen(true);
+  //   });
+  // };
+
   const handleLogin = () => {
     console.log(`Attempting to login with email: ${email}`);
     axios.get('http://localhost:4000/users', {
@@ -29,12 +174,14 @@ const Login = ({ setAuthenticated }) => {
       // const user = res.data.user;
      const users = res.data;
      
+
       // console.log("printing value of res.data : ", res.data)
       console.log('Response from server (res.data value):', res.data);
 
       const user = users.find(user => user.email === email);
       // const adminEmailPattern = /admin.*@.*\.(com|in)$/i;
 
+      
       //to avoid users whose name has 'admin' in it to login to admin portal
       const adminEmailPattern = /^admin\..+@.+\.(com|in)$/i; //better version of admin mail pattern 
 
@@ -51,8 +198,6 @@ const Login = ({ setAuthenticated }) => {
           } else {
           setloginDialogMessage('Logged in successfully!');
           setOpen(true);}
-
-          sessionStorage.setItem ('userId', email)
           sessionStorage.setItem ('user_id', user._id)
           sessionStorage.setItem ('userName', user.name)
           console.log ("Username stored in session: ", user.name)
@@ -88,6 +233,9 @@ const Login = ({ setAuthenticated }) => {
       setOpen(true);
     });
   };
+
+
+
 
   const handleClose = () => {
     setOpen(false);
@@ -173,7 +321,7 @@ const Login = ({ setAuthenticated }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             InputProps={{
-              style: { color: 'grey'},
+              style: { color: 'white'},
             }}
             InputLabelProps={{
               style: { color: 'gray' },
@@ -226,21 +374,13 @@ const Login = ({ setAuthenticated }) => {
               width: '100%',
             }}
           />
-          <Button 
-           sx={{
-                width: 250,
-                backgroundColor: 'teal',
-                color: 'white',
-                '&:hover': {
-                  backgroundColor: '#007474',
-                }
-              }} 
-          variant="contained" 
-          color="primary" 
-          onClick={handleLogin}>
+          <Button sx={{ width: '100%' }} variant="contained" color="primary" onClick={handleLogin}>
             Login
           </Button>
           <Box sx={{ textAlign: 'center' }}>
+          <Link href="/forgot" color="primary" underline="hover">
+              Forgot password
+            </Link><br />
             <Link href="/signup" color="primary" underline="hover">
               Not a member? Sign up now!
             </Link>
