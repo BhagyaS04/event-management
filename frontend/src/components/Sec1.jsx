@@ -166,10 +166,10 @@ const Sec1 = () => {
             <Typography className='eventHeader' variant="h3" component="div" style={{ color: 'rgba(238, 238, 238, 0.5)' }}>
               {selectedItem.eventName}
             </Typography>
-            <Typography className='eventDate' variant = 'h6' style = {{color : 'white', textAlign : 'left'}}>
+            <Typography className='eventDate' variant = 'h6' style = {{color : 'rgba(238, 238, 238, 0.5)', textAlign : 'left'}}>
             <br></br>Happening on: {selectedItem.eventDates}
             </Typography>
-            <Typography variant = 'h6' style = {{color : 'white', textAlign : 'left', fontSize : 'large'}}>
+            <Typography variant = 'h6' style = {{color : 'rgba(238, 238, 238, 0.5)', textAlign : 'left', fontSize : 'large'}}>
              <br></br> {selectedItem.eventDesc}
             </Typography>
             </>

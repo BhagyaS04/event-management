@@ -6,8 +6,7 @@ const eventSchema=mongoose.Schema({
     eventDesc : String,
     eventPoster: String,
     eventLikes : Array,
-    eventComments: Array,
-
+    eventComments: [{ userId: String, comment: String }],
 })
 
 const EventData=mongoose.model('event',eventSchema); 

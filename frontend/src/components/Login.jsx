@@ -18,6 +18,7 @@ const Login = ({ setAuthenticated }) => {
   const navigate = useNavigate();
   const [loginDialogMessage, setloginDialogMessage] = useState ('')
   const [dialogType, setDialogType] = useState('');
+  const [id, setId] = useState ('')
 
   const handleLogin = () => {
     console.log(`Attempting to login with email: ${email}`);
@@ -52,6 +53,9 @@ const Login = ({ setAuthenticated }) => {
           setOpen(true);}
 
           sessionStorage.setItem ('userId', email)
+          sessionStorage.setItem ('user_id', user._id)
+          sessionStorage.setItem ('userName', user.name)
+          console.log ("Username stored in session: ", user.name)
 
           // if (email === 'admin@example.com') {
           //   setDialogType('admin');

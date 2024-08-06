@@ -30,24 +30,25 @@ const UserNavbar = () => {
   const [isAvatarVisible, setIsAvatarVisible] = useState(true);
   const navigate = useNavigate();
   const [username, setUsername] = useState ('')
+  const user = sessionStorage.getItem ('userName')
 
-  useEffect(() => {
-    const fetchusername = async () => {
-      try {
-        const res = await axios.get('http://localhost:4000/users');
-        if (res.data) {
-          setUsername(res.data.name);
-          console.log (res.data)
-          console.log('Fetched username:', res.data.name);
-        } else {
-          console.error('Unexpected response data format:', res.data);
-        }
-      } catch (error) {
-        console.error('Error fetching username:', error);
-      }
-    };
-    fetchusername();
-  }, []);
+  // useEffect(() => {
+  //   const fetchusername = async () => {
+  //     try {
+  //       const res = await axios.get('http://localhost:4000/users');
+  //       if (res.data) {
+  //         setUsername(res.data.name);
+  //         console.log (res.data)
+  //         console.log('Fetched username:', res.data.name);
+  //       } else {
+  //         console.error('Unexpected response data format:', res.data);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching username:', error);
+  //     }
+  //   };
+  //   fetchusername();
+  // }, []);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -109,7 +110,7 @@ const UserNavbar = () => {
                 textDecoration: 'none',
               }}
             >
-              Event Manager
+              Olam
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -184,12 +185,12 @@ const UserNavbar = () => {
               <IconButton onClick={handleLogoutClick} sx={{ color: 'white', mr: 2 }}>
                 <LogoutIcon />
               </IconButton>
-              <Tooltip title="Open settings">
+              <Tooltip title={user}>
                 {/* Conditionally render Avatar button based on isAvatarVisible state */}
                 {isAvatarVisible && (
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt={username} src="/static/images/avatar/2.jpg">
-                      {username ? getInitials(username) : ''}
+                    <Avatar alt={user} src="/static/images/avatar/2.jpg">
+                      {user ? getInitials(user) : ''}
                     </Avatar>
                   </IconButton>
                 )}

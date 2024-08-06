@@ -4,7 +4,7 @@ import './RegisterButton.css';
 import RegisterPage from './RegisterPage';
 import { useNavigate } from 'react-router-dom';
 
-const RegisterButton = () => {
+const RegisterButton = ({eventId}) => {
   const [openPopup, setOpenPopup] = useState(false);
 
   const handleOpenPopup = () => {
@@ -21,7 +21,7 @@ const RegisterButton = () => {
         <p>Register now</p>
         <ArrowForwardIosIcon className="icon" />
       </button>
-      <RegisterPage open={openPopup} onClose={handleClosePopup} />
+      <RegisterPage open={openPopup} onClose={handleClosePopup} eventId = {eventId} />
     </div>
   );
 };

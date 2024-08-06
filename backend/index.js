@@ -88,6 +88,21 @@ app.post('/user-new', async (req, res) => {
     }
 });
 
+app.get('/users/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const user = await userModel.findById(userId).select('name'); // Adjust fields as needed
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+});
+
 app.get ('/events', async (req, res) => {
     try {
         // const event = await eventModel.find({},'eventName eventDates eventDesc  eventPoster eventLikes eventComments');        
@@ -132,6 +147,7 @@ app.get('/events/:eventId', async (req, res) => {
     res.send({
       eventName: event.eventName, // Assuming your event model has an eventName field
       eventLikes: event.eventLikes,
+      eventPoster: event.eventPoster
     });
   } catch (error) {
     console.error('Error fetching event details:', error);
@@ -268,7 +284,16 @@ app.patch('/users/:id/block', async (req, res) => {
   });
 
 //sending email
-app.post('/send-email', sendEmail);
+app.post('/send-email', async (req, res) => {
+  try {
+    const { subject, text } = req.body; // Destructure subject and text from the request body
+    const emailResponse = await sendEmail({ subject, message: text });
+    res.status(emailResponse.status).json({ message: emailResponse.message });
+  } catch (error) {
+    console.error('Something went wrong: ', error);
+    res.status(500).json({ message: 'Error sending email', error: error.message });
+  }
+});
 
 // Fetch security question by email
 app.post('/security-question', async (req, res) => {
@@ -311,6 +336,45 @@ app.post('/verify-security-answer', async (req, res) => {
   } catch (error) {
       console.error('Error verifying security answer:', error);
       res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+app.get('/events/:eventId/eventComments/comment', async (req, res) => {
+  const { eventId } = req.params;
+
+  try {
+    const event = await eventModel.findById(eventId);
+
+    if (!event) {
+      return res.status(404).send({ message: 'Event not found' });
+    }
+
+    res.send({ eventComments: event.eventComments });
+  } catch (error) {
+    console.error('Error fetching event comments:', error);
+    res.status(500).send({ message: 'Error fetching event comments' });
+  }
+});
+
+
+app.post('/events/:eventId/eventComments/comment', async (req, res) => {
+  const { eventId } = req.params;
+  const { userId, comment } = req.body;
+
+  try {
+    const event = await eventModel.findById(eventId);
+
+    if (!event) {
+      return res.status(404).send({ message: 'Event not found' });
+    }
+
+    event.eventComments.push({ userId, comment });
+    await event.save();
+
+    res.send({ eventComments: event.eventComments });
+  } catch (error) {
+    console.error('Error updating event comments:', error);
+    res.status(500).send({ message: 'Error updating event comments' });
   }
 });
 

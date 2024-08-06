@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Box, IconButton, Typography, FormControl, Button, FormLabel, FormControlLabel, Radio, Select, MenuItem, InputLabel, Stack } from '@mui/material';
+import { CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box, IconButton, Typography, FormControl, Button, FormLabel, FormControlLabel, Radio, Select, MenuItem, InputLabel, Stack } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { AnimatePresence, motion } from 'framer-motion';
 import './RegisterPage.css';
 import axios from 'axios';
 
-const RegisterPage = ({ open, onClose }) => {
+
+const RegisterPage = ({ open, onClose, eventId }) => {
   const [eventName, setEventName] = useState ('')
   const [selectedOption, setSelectedOption] = useState('');
   const [radioValue, setRadioValue] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);
   };
 
-
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+  };
   const variants = {
     initial: {
       scale: 0.8,
@@ -37,28 +42,43 @@ const RegisterPage = ({ open, onClose }) => {
       },
     },
   };
-
-  useEffect (() => {
-    const fetchEventName = async () => {
+  useEffect(() => {
+    const fetchEventDetails = async () => {
       try {
-        const res = await axios.get ('http://localhost:4000/events')
-        // console.log ("response data: ", res.data)
-        if (res.data) {
-          const mappedEvents = res.data.map(event => ({
-            // id: event.id,
-            eventName: event.eventName,
-          }));
-          setEventName(mappedEvents);
-          console.log('Entered into eventNames:', eventName);
-        } else {
-          console.error('Unexpected response data format:', res.data);
-        }
+        const response = await axios.get(`/events/${eventId}`);
+        setEventName(response.data.eventName); // Adjust according to your API response
       } catch (error) {
-        console.error('Error fetching event names:', error);
+        console.error('Error fetching event details:', error);
+        setError('Error fetching event details');
+      } finally {
+        setLoading(false);
       }
     };
-    fetchEventName();
-  }, []);
+
+    fetchEventDetails();
+  }, [eventId]);
+    const [sendEmail, setSendEmail] = useState({
+      subject: 'Registration successful!',
+      text: `You have successfully registered for the event ${eventName} with Olam Event Management!`
+    });
+  
+    const onRegister = () => {
+      setLoading(true);
+      axios.post('http://localhost:4000/send-email', {
+        subject: sendEmail.subject,
+        text: sendEmail.text
+      })
+        .then(response => {
+          console.log('Registered successfully! Please check your E-mail for confirmation', response);
+          setDialogOpen(true);
+        })
+        .catch(error => {
+          console.error('Error sending email', error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    };
 
   return (
     <AnimatePresence>
@@ -156,11 +176,25 @@ const RegisterPage = ({ open, onClose }) => {
                     backgroundColor: 'lightblue',
                   },
                 }}
+                onClick = {onRegister}
               >
                 Register
               </Button>
             </Stack>
           </motion.div>
+          <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+            <DialogTitle>Registration Successful</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Registered successfully! Please check your E-mail for confirmation.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDialog} color="primary">
+                OK
+              </Button>
+            </DialogActions>
+          </Dialog>
         </div>
       )}
     </AnimatePresence>
